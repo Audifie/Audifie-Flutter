@@ -3,6 +3,7 @@ import 'package:audifie_version_1/core/services/email_sender_service.dart';
 import 'package:audifie_version_1/core/services/file_picker_service.dart';
 import 'package:audifie_version_1/core/services/validator_service.dart';
 import 'package:audifie_version_1/core/size_config.dart';
+import 'package:audifie_version_1/features/audio_doc/data/data_sources/audio_doc_local_data_source.dart';
 import 'package:audifie_version_1/features/audio_doc/data/data_sources/audio_doc_remote_data_source.dart';
 import 'package:audifie_version_1/features/audio_doc/data/repositories/audio_doc_repo_impl.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/repositories/audio_doc_repo.dart';
@@ -29,24 +30,30 @@ Future<void> setUpServices() async {
 
   // External dependencies
   sl.registerSingleton<Dio>(Dio());
-  sl.registerSingleton<SharedPreferences>(await SharedPreferences.getInstance());
+  sl.registerSingleton<SharedPreferences>(
+      await SharedPreferences.getInstance());
   sl.registerSingleton<AudioPlayer>(AudioPlayer());
   sl.registerSingleton<AudioHandler>(await initAudioService());
   sl.registerSingleton<FilePicker>(FilePicker.platform);
   sl.registerSingleton<GoogleSignIn>(GoogleSignIn());
+  // sl.registerSingleton<FacebookAuth>(FacebookAuth.instance);
 
   // Services
   sl.registerSingleton<AudioPlayerService>(AudioPlayerServiceImpl());
   sl.registerSingleton<FilePickerService>(FilePickerServiceImpl());
   sl.registerSingleton<EmailSenderService>(EmailSenderServiceImpl());
   sl.registerSingleton<ValidatorService>(ValidatorServiceImpl());
-  
+
   // Data sources
   sl.registerSingleton<AuthLocalDataSource>(AuthLocalDataSourceImpl());
   sl.registerSingleton<AuthRemoteDataSource>(AuthRemoteDataSourceImpl());
-  sl.registerSingleton<AudioDocRemoteDataSource>(AudioDocRemoteDataSourceImpl());
+  sl.registerSingleton<AudioDocRemoteDataSource>(
+      AudioDocRemoteDataSourceImpl());
+  sl.registerSingleton<AudioDocLocalDataSource>(
+      AudioDocLocalDataSourceImpl());
   sl.registerSingleton<SettingsLocalDataSource>(SettingsLocalDataSourceImpl());
-  sl.registerSingleton<SettingsRemoteDataSource>(SettingsRemoteDataSourceImpl());
+  sl.registerSingleton<SettingsRemoteDataSource>(
+      SettingsRemoteDataSourceImpl());
 
   // Repos
   sl.registerSingleton<AuthRepo>(AuthRepoImpl());

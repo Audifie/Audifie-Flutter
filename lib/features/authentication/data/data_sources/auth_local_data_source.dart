@@ -1,7 +1,6 @@
 import 'package:audifie_version_1/core/constants/strings.dart';
 import 'package:audifie_version_1/core/errors/exception.dart';
 import 'package:audifie_version_1/core/service_locator.dart';
-import 'package:dartz/dartz.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {

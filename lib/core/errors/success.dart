@@ -13,6 +13,14 @@ class GetSuccess extends Success {
   List<Object?> get props => [message];
 }
 
+class PostSuccess extends Success {
+  final String message;
+  const PostSuccess({required this.message}) : super(message: message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class SendEmailSuccess extends Success {
   final String message;
   const SendEmailSuccess({required this.message}) : super(message: message);

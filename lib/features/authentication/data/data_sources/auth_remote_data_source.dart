@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:audifie_version_1/core/constants/strings.dart';
 import 'package:audifie_version_1/core/errors/exception.dart';
 import 'package:audifie_version_1/core/global/data/models/user_info_model.dart';
@@ -12,7 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<UserInfoModel?> getCurrentUser(String accessToken);
+  void setAccessTokenAsCookieGlobally(String accessToken);
+  Future<UserInfoModel?> getCurrentUser();
 
   Future<void> sendOptForSignUp(SignUpInfoModel signUpInfoModel);
   Future<void> verifyOtpAndSignUp(String email, String otp);
@@ -24,6 +23,8 @@ abstract class AuthRemoteDataSource {
   Future<String> facebookSignIn();
 
   Future<void> forgotPassword(ForgotPasswordInfoModel forgotPasswordInfoModel);
+
+  Future<void> logout();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -31,15 +32,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final GoogleSignIn _googleSignIn = sl<GoogleSignIn>();
 
   @override
-  Future<UserInfoModel?> getCurrentUser(String accessToken) async {
+  void setAccessTokenAsCookieGlobally(String accessToken) {
+    _dio.options.headers = {
+      'cookie': accessToken,
+    };
+  }
+
+  @override
+  Future<UserInfoModel?> getCurrentUser() async {
     try {
       final Response response = await _dio.get(
         Strings.apiCurrentUser,
-        options: Options(
-          headers: {
-            HttpHeaders.authorizationHeader: accessToken,
-          },
-        ),
+        // options: Options(
+        //   headers: {
+        //     'cookie': accessToken,
+        //   },
+        // ),
       );
       if (response.statusCode == 200) {
         if (response.data['user'] != null) {
@@ -48,7 +56,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
       return null;
     } on DioError catch (e) {
-      print('Error in [AuthRemoteDataSourceImpl] [currentUser]: ${e.message}');
+      print('message: ' + e.response?.data['message']);
+      print(
+          'Error in [AuthRemoteDataSourceImpl] [currentUser] [DioError]: ${e.message}');
       return null;
     }
   }
@@ -140,8 +150,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         },
       );
       if (response.statusCode == 200) {
-        if (response.data['token'] != null) {
-          return response.data['token'];
+        final String? accessToken = response.headers['set-cookie']?[0];
+        print('Cookie reponse: $accessToken');
+        if (accessToken != null) {
+          setAccessTokenAsCookieGlobally(accessToken);
+          return accessToken;
         }
         throw SignInException(message: 'Access token was null');
       }
@@ -165,41 +178,41 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<String> googleSignIn() async {
     GoogleSignInAccount? googleAccount;
     try {
-      final bool isUserSignedIn = await _googleSignIn.isSignedIn();
-      print('User signed in: $isUserSignedIn');
+      final GoogleSignInAccount? currentUser = _googleSignIn.currentUser;
+      print('Current user: $currentUser');
 
-      if (isUserSignedIn) {
-        await _googleSignIn.signOut();
+      if (currentUser != null) {
+        await _googleSignIn.disconnect();
+        // googleAccount = _googleSignIn.currentUser;
       }
-
+      // else {
       googleAccount = await _googleSignIn.signIn();
+      // }
       if (googleAccount != null) {
-        final Map<String, dynamic> map = await googleAccount.authHeaders;
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleAccount.authentication;
 
-        print('Display name: ${googleAccount.displayName}');
-
-        if (map['Authorization'] != null) {
-          final String code = map['Authorization'].toString().split(' ').last;
-          print('Code: $code');
-
+        final String? code = googleSignInAuthentication.idToken;
+        print('Code: $code');
+        if (code != null) {
           final Response response = await _dio.post(
             Strings.apiGoogleLogin,
             data: {
               'code': code,
             },
           );
-
-          if (response.statusCode == 200) {
-            if (response.data['token'] != null) {
-              return response.data['token'];
-            }
-            throw SignInException(message: 'Access token was null');
-          } else {
-            if (response.data['message'] != null) {
-              throw SignInException(message: response.data['message']);
-            }
-          }
         }
+
+        // if (response.statusCode == 200) {
+        //   if (response.data['token'] != null) {
+        //     // return response.data['token'];
+        //   }
+        //   throw SignInException(message: 'Access token was null');
+        // } else {
+        //   if (response.data['message'] != null) {
+        //     throw SignInException(message: response.data['message']);
+        //   }
+        // }
       }
       throw SignInException(message: 'There was some error. Please try again');
     } on SignInException catch (e) {
@@ -209,7 +222,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on DioError catch (e) {
       print(
           'Error in [AuthRemoteDataSourceImpl] [googleSignIn] [DioError]: ${e.error}');
-      final message = e.response!.data;
+      final message = e.response!.data['message'];
       print('Msg: $message');
       throw SignInException(message: '');
     } on PlatformException catch (e) {
@@ -224,14 +237,60 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> facebookSignIn() {
-    // TODO: implement facebookSignIn
-    throw UnimplementedError();
+  Future<String> facebookSignIn() async {
+    try {
+      // final AccessToken? accessToken = await _facebookAuth.accessToken;
+      // if (accessToken != null) {
+      //   print('Facebook access token from user: ${accessToken.token}');
+      //   throw SignInException(
+      //       message: 'There was some error. Please try again');
+      // } else {
+      //   final LoginResult loginResult = await _facebookAuth.login();
+      //   print('Facebook access token: ${loginResult.accessToken.toString()}');
+      //   throw SignInException(
+      //       message: 'There was some error. Please try again');
+      // }
+
+      // final LoginResult loginResult = await _facebookAuth.login();
+      // print('Facebook access token: ${loginResult.accessToken.toString()}');
+      throw SignInException(message: 'There was some error. Please try again');
+    } catch (e) {
+      throw SignInException(message: 'There was some error. Please try again');
+    }
   }
 
   @override
   Future<void> forgotPassword(ForgotPasswordInfoModel forgotPasswordInfoModel) {
     // TODO: implement forgotPassword
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      final Response response = await _dio.post(
+        Strings.apiLogout,
+        // options: Options(
+        //   headers: {
+        //     'cookie': accessToken,
+        //   },
+        // ),
+      );
+      if (response.statusCode != 200) {
+        print(
+            'Error in [AuthRemoteDataSourceImpl] [logout]: status code not 200');
+        throw SignOutException(
+            message: 'There was an error in signing out. Please try again');
+      }
+    } on SignOutException {
+      print(
+          'Error in [AuthRemoteDataSourceImpl] [logout]: status code not 200');
+
+      rethrow;
+    } catch (e) {
+      print('Error in [AuthRemoteDataSourceImpl] [logout]: $e');
+      throw SignOutException(
+          message: 'There was an error in signing out. Please try again');
+    }
   }
 }

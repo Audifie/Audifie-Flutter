@@ -189,7 +189,15 @@ class _AudioDocCardState extends State<AudioDocCard> {
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {
-                                  // TODO: Favourite button function
+                                  widget.audioDoc.isFavourite
+                                      ? context
+                                          .read<AudioDocNotifier>()
+                                          .changeFavouriteTo(
+                                              context, widget.audioDoc, false)
+                                      : context
+                                          .read<AudioDocNotifier>()
+                                          .changeFavouriteTo(
+                                              context, widget.audioDoc, true);
                                 },
                                 borderRadius:
                                     BorderRadius.circular(sc.height(50)),
@@ -338,18 +346,15 @@ class _AudioDocCardState extends State<AudioDocCard> {
                             : Strings.favouriteOutlineIcon,
                         _fav,
                         () {
-                          // TODO: Favourite function
-                          // final String idToken = context
-                          //     .read<PageSelectorNotifier>()
-                          //     .authSession!
-                          //     .userPoolTokens
-                          //     .idToken;
-                          // !widget.audioDocModel.isFavourite
-                          //     ? context
-                          //         .read<UploadNotifier>()
-                          //         .addFavourite(widget.audioDocModel, idToken)
-                          //     : context.read<UploadNotifier>().removeFavourite(
-                          //         widget.audioDocModel, idToken);
+                          widget.audioDoc.isFavourite
+                              ? context
+                                  .read<AudioDocNotifier>()
+                                  .changeFavouriteTo(
+                                      context, widget.audioDoc, false)
+                              : context
+                                  .read<AudioDocNotifier>()
+                                  .changeFavouriteTo(
+                                      context, widget.audioDoc, true);
                         },
                       ),
                       _divider,

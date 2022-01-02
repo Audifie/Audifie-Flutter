@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:audifie_version_1/core/constants/palette.dart';
 import 'package:audifie_version_1/core/constants/strings.dart';
 import 'package:audifie_version_1/core/size_config.dart';
 import 'package:audifie_version_1/core/widgets/core_widgets.dart';
 import 'package:audifie_version_1/core/widgets/loading_widget.dart';
+import 'package:audifie_version_1/features/audio_doc/data/data_sources/audio_doc_remote_data_source.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/entities/progress_state_enum.dart';
 import 'package:audifie_version_1/features/audio_doc/presenter/notifiers/audio_doc_notifier.dart';
 import 'package:audifie_version_1/features/audio_doc/presenter/pages/components/audio_doc_card.dart';
 import 'package:audifie_version_1/features/audio_doc/presenter/pages/components/audio_doc_processing_card.dart';
 import 'package:audifie_version_1/features/audio_doc/presenter/pages/components/empty_list_widget.dart';
+import 'package:audifie_version_1/features/audio_doc/presenter/pages/components/upload_button.dart';
 import '../../../../core/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,10 +25,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const String _upload = "Upload";
   static const double _horizontalPadding = 32;
 
   static final SizeConfig sc = sl<SizeConfig>();
+
+  late StreamController<int> _uploadStreamController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _uploadStreamController = StreamController<int>();
+    if (_uploadStreamController.hasListener) {
+      _uploadStreamController.stream.listen((value) {
+        if (value == 100) {
+          _uploadStreamController.stream.drain();
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,86 +69,40 @@ class _HomePageState extends State<HomePage> {
                   horizontal: sc.width(_horizontalPadding)),
               child: Column(
                 children: [
-                  // SizedBox(height: sc.height(51)),
-                  // Audifie icon
-                  // SvgPicture.asset(
-                  //   Strings.audifieTextIcon,
-                  //   width: sc.width(111),
-                  //   height: sc.height(24),
-                  //   color: Palette.primary,
-                  // ),
                   SizedBox(height: sc.height(104)),
                   // Upload button
-                  ElevatedButton(
-                    onPressed: () {
-                      // TODO: Upload function
-                      // final String userID = context
-                      //     .read<PageSelectorNotifier>()
-                      //     .authUser!
-                      //     .userId;
-                      // final String idToken = context
-                      //     .read<PageSelectorNotifier>()
-                      //     .authSession!
-                      //     .userPoolTokens
-                      //     .idToken;
-                      // context
-                      //     .read<UploadNotifier>()
-                      //     .uploadDoc(userID, idToken, filePathsBox: Hive.box(Strings.filePathsBox));
-                      // Get.dialog(
-                      //   WillPopScope(
-                      //     onWillPop: () async {
-                      //       return false;
-                      //     },
-                      //     child: UploadDialog(
-                      //       height: dialogHeight,
-                      //       valueStream: uploadNotifier.uploadStream,
-                      //     ),
-                      //   ),
-                      //   useSafeArea: false,
-                      //   barrierDismissible: false,
-                      //   useRootNavigator: false,
-                      // );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: sc.width(44),
-                        vertical: sc.height(14),
-                      ),
-                      primary: Palette.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(sc.height(100)),
-                      ),
-                      alignment: Alignment.center,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          Strings.uploadIcon,
-                          width: sc.height(20),
-                          height: sc.height(20),
-                          color: Palette.primaryText,
-                        ),
-                        SizedBox(width: sc.width(20)),
-                        Text(
-                          _upload,
-                          style: TStyle(
-                            color: Palette.primaryText,
-                            size: sc.text(18),
-                            isBold: true,
-                            font: Strings.comfortaaFont,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  StreamBuilder<int>(
+                      stream: _uploadStreamController.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+                          return UploadButton(
+                            isUploading: true,
+                            onCancelClicked: () {
+                              _uploadStreamController.stream.drain();
+                            },
+                            value: snapshot.data,
+                          );
+                        }
+                        return UploadButton(
+                          isUploading: false,
+                          onUploadClicked: () {
+                            final Stream<int> stream =
+                                AudioDocRemoteDataSourceImpl()
+                                    .generateTestStream();
+                            _uploadStreamController.addStream(stream);
+                          },
+                        );
+                      }),
                   SizedBox(height: sc.height(93)),
                   // Document list
                   audioDocNotifier.audioDocs.isNotEmpty
-                      ? Column(
-                          children:
-                              audioDocNotifier.audioDocs.asMap().entries.map(
+                      ? !audioDocNotifier.isProblemInFetching
+                          ? Column(
+                              children: audioDocNotifier.audioDocs
+                                      .asMap()
+                                      .entries
+                                      .map(
                                     (audioDoc) {
                                       if (audioDoc.key >= 3) {
                                         return const SizedBox();
@@ -135,11 +113,45 @@ class _HomePageState extends State<HomePage> {
                                           audioDoc: audioDoc.value,
                                         );
                                       }
-                                      return AudioDocProcessingCard(audioDoc: audioDoc.value);
+                                      return AudioDocProcessingCard(
+                                          audioDoc: audioDoc.value);
                                     },
                                   ).toList() +
                                   [SizedBox(height: sc.height(200))],
-                        )
+                            )
+                          : Column(
+                              children: [
+                                Text(
+                                  'There was an error. Please reload',
+                                  style: TStyle(
+                                    color: Palette.primaryText,
+                                    size: sc.text(14),
+                                    isBold: true,
+                                    font: Strings.comfortaaFont,
+                                  ),
+                                ),
+                                SizedBox(height: sc.height(24)),
+                                InkWell(
+                                  onTap: () {
+                                    context
+                                        .read<AudioDocNotifier>()
+                                        .getAllAudioDocs(context);
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(sc.height(6)),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Palette.primary,
+                                    ),
+                                    child: Icon(
+                                      Icons.replay_outlined,
+                                      color: Palette.primaryText,
+                                      size: sc.height(24),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                       : EmptyListWidget(),
                 ],
               ),

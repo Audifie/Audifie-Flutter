@@ -104,6 +104,11 @@ class Strings {
   static const apiGoogleLogin = 'http://3.109.49.60:8080/api/users/googlesignup';
   static const apiFacebookLogin = 'http://3.109.49.60:8080/api/users/fbsignup';
   static const apiCurrentUser = 'http://3.109.49.60:8080/api/users/current';
+  static const apiLogout = 'http://3.109.49.60:8080/api/users/logout';
+  static const apiGetAllDocs = 'http://3.109.49.60:8080/api/documents';
+  static const apiFavourite = 'http://3.109.49.60:8080/api/documents/edit/';
+  static const apiDeleteDoc = 'http://3.109.49.60:8080/api/documents/delete/';
+  static const apiUploadDoc = 'http://3.109.49.60:8080/api/documents/upload';
   // static const userFilesAPILink =
   //     "https://gt8u1r94bf.execute-api.ap-south-1.amazonaws.com/dev/userfiles";
   // static const allFilesAPILink =

@@ -24,16 +24,20 @@ class AuthRepoImpl implements AuthRepo {
   Future<Either<Failure, UserInfo>> getCurrentUser() async {
     try {
       final String accessToken = await _authLocalDataSource.getAccessToken();
-      final UserInfo? user = await _authRemoteDataSource.getCurrentUser(accessToken);
+      _authRemoteDataSource.setAccessTokenAsCookieGlobally(accessToken);
+      final UserInfo? user =
+          await _authRemoteDataSource.getCurrentUser();
       if (user != null) {
         return Right(user);
       }
       await _authLocalDataSource.deleteAccessToken();
       return Left(SignInFailure(message: 'User not logged in'));
     } on ReadException catch (e) {
-      return Left(ReadFailure(message: 'There was some error. Please try again'));
+      return Left(
+          ReadFailure(message: 'There was some error. Please try again'));
     } on DioError catch (e) {
-      return Left(SignInFailure(message: 'There was some error. Please try again'));
+      return Left(
+          SignInFailure(message: 'There was some error. Please try again'));
     }
   }
 
@@ -52,7 +56,8 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<Either<Failure, Success>> verifyOtpAndSignUpAndStoreAccessToken(SignUpInfo signUpInfo, String otp) async {
+  Future<Either<Failure, Success>> verifyOtpAndSignUpAndStoreAccessToken(
+      SignUpInfo signUpInfo, String otp) async {
     String? accessToken;
     try {
       await _authRemoteDataSource.verifyOtpAndSignUp(signUpInfo.email, otp);
@@ -92,18 +97,21 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<Either<Failure, Success>> signInAndStoreAccessToken(SignInInfo signInInfo) async {
+  Future<Either<Failure, Success>> signInAndStoreAccessToken(
+      SignInInfo signInInfo) async {
     try {
       final SignInInfoModel signInInfoModel =
           AuthRepoImplUtil.signInInfoToModel(signInInfo);
-      final String accessToken = await _authRemoteDataSource.signIn(signInInfoModel);
+      final String accessToken =
+          await _authRemoteDataSource.signIn(signInInfoModel);
       await _authLocalDataSource.storeAccessToken(accessToken);
 
       return Right(SignInSuccess(message: Strings.signInSuccess));
     } on SignInException catch (e) {
       return Left(SignInFailure(message: e.message));
     } on WriteException catch (e) {
-      return Left(WriteFailure(message: 'There was some problem. Please try again'));
+      return Left(
+          WriteFailure(message: 'There was some problem. Please try again'));
     }
   }
 
@@ -117,7 +125,8 @@ class AuthRepoImpl implements AuthRepo {
     } on SignInException catch (e) {
       return Left(SignInFailure(message: e.message));
     } on WriteException catch (e) {
-      return Left(SignInFailure(message: 'There was some problem. Please try again'));
+      return Left(
+          SignInFailure(message: 'There was some problem. Please try again'));
     }
   }
 
@@ -141,8 +150,11 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<Either<Failure, Success>> signOut() async {
     try {
+      await _authRemoteDataSource.logout();
       await _authLocalDataSource.deleteAccessToken();
       return Right(SignOutSuccess(message: 'Successfully signed out'));
+    } on SignOutException catch (e) {
+      return Left(SignOutFailure(message: e.message));
     } on WriteException catch (e) {
       return Left(SignOutFailure(message: 'Failed to sign out'));
     }

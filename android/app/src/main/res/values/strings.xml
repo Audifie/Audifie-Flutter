@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Audifie_Auth</string>
+  <string name="facebook_app_id">152396070428016</string>
+  <string name="fb_login_protocol_scheme">fb152396070428016</string>
+
+  <string name="default_web_client_id">145793460805-uo3759g52o21agjg6egb1k2jtbrb395m.apps.googleusercontent.com</string>
+</resources>

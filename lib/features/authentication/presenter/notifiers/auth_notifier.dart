@@ -24,17 +24,13 @@ class AuthNotifier extends ChangeNotifier {
   Future<UserInfo?> getCurrentUser() async {
     _isLoading = true;
 
-    await Future.delayed(const Duration(seconds: 1));
-
-    _isAuthDone = true;
-
-    // await _signInUsecase.getCurrentUser()
-    //   ..fold((l) {
-    //     _isAuthDone = false;
-    //   }, (r) {
-    //     _currentUser = r;
-    //     _isAuthDone = true;
-    //   });
+    await _signInUsecase.getCurrentUser()
+      ..fold((l) {
+        _isAuthDone = false;
+      }, (r) {
+        _currentUser = r;
+        _isAuthDone = true;
+      });
 
     _isLoading = false;
     notifyListeners();
@@ -90,12 +86,28 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   void googleSignIn(BuildContext context) async {
+    _isLoading = true;
+    notifyListeners();
+
+    await _signInUsecase.googleSignIn()
+      ..fold((l) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(Snackbar(message: l.message));
+      }, (r) {
+        _isAuthDone = true;
+      });
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void facebookSignIn(BuildContext context) async {
     _showCommingSoon(context);
 
     // _isLoading = true;
     // notifyListeners();
 
-    // await _signInUsecase.googleSignIn()
+    // await _signInUsecase.facebookSignIn()
     //   ..fold((l) {
     //     ScaffoldMessenger.of(context)
     //         .showSnackBar(Snackbar(message: l.message));
@@ -105,10 +117,6 @@ class AuthNotifier extends ChangeNotifier {
 
     // _isLoading = false;
     // notifyListeners();
-  }
-
-  void facebookSignIn(BuildContext context) async {
-    _showCommingSoon(context);
   }
 
   void forgotPassword(BuildContext context) async {

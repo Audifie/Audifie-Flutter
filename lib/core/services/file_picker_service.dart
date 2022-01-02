@@ -6,6 +6,7 @@ import '../service_locator.dart';
 
 abstract class FilePickerService {
   Future<List<File>?> pickFiles();
+  Future<File?> pickFile();
 }
 
 class FilePickerServiceImpl implements FilePickerService {
@@ -21,5 +22,16 @@ class FilePickerServiceImpl implements FilePickerService {
     if (result == null)
       return null;
     return _platformFilesToFiles(result.files); 
+  }
+
+  @override
+  Future<File?> pickFile() async {
+    final FilePickerResult? result = await filePicker.pickFiles();
+    if (result != null) {
+      if (result.files.isNotEmpty && result.files[0].path != null) {
+        return File(result.files[0].path!);
+      }
+    }
+    return null;
   }
 }

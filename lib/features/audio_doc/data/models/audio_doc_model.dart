@@ -7,8 +7,7 @@ class AudioDocModel extends AudioDoc {
     required String fileId,
     required String title,
     String? imageUrl,
-    String? fileUrl,
-    required String progressState,
+    required bool isProcessing,
     required List<String> pages,
     required bool isFavourite,
   }) : super(
@@ -16,8 +15,8 @@ class AudioDocModel extends AudioDoc {
           title: title,
           duration: const Duration(),
           imageUrl: imageUrl,
-          fileUrl: fileUrl,
-          progressState: _getProgressState(progressState),
+          fileUrl: null,
+          progressState: _getProgressState(isProcessing),
           pages: _getPageInfos(pages),
           isFavourite: isFavourite,
           file: null,
@@ -28,23 +27,19 @@ class AudioDocModel extends AudioDoc {
     return pages.map((url) => PageInfo(url: url)).toList();
   }
 
-  static ProgressStateEnum _getProgressState(String progressState) {
-    ProgressStateEnum progressEnum = ProgressStateEnum.processing;
+  static ProgressStateEnum _getProgressState(bool isProcessing) {
+    if (isProcessing) return ProgressStateEnum.processing;
+    return ProgressStateEnum.complete;
+  }
 
-    switch (progressState) {
-      case "PROCESSING":
-        progressEnum = ProgressStateEnum.processing;
-        break;
-      case "SPEECHSYNTH":
-        progressEnum = ProgressStateEnum.speechsynth;
-        break;
-      case "COMPLETE":
-        progressEnum = ProgressStateEnum.complete;
-        break;
-      default:
-        progressEnum = ProgressStateEnum.processing;
-    }
-
-    return progressEnum;
+  factory AudioDocModel.fromMap(Map<String, dynamic> map) {
+    return AudioDocModel(
+      fileId: map['_id'] ?? DateTime.now().toString(),
+      title: map['title'] ?? '-- Title --',
+      imageUrl: map['imageURL'] ?? null,
+      isProcessing: map['processing'] ?? false,
+      pages: [],
+      isFavourite: map['isFavourite'] ?? false,
+    );
   }
 }

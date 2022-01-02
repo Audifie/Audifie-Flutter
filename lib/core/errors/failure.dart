@@ -13,6 +13,14 @@ class GetFailure extends Failure {
   List<Object?> get props => [message];
 }
 
+class PostFailure extends Failure {
+  final String message;
+  const PostFailure({required this.message}) : super(message: message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class PickFilesFailure extends Failure {
   final String message;
   const PickFilesFailure({required this.message}) : super(message: message);

@@ -8,6 +8,11 @@ class GetException implements Exception {
   const GetException({required this.message});
 }
 
+class PostException implements Exception {
+  final String message;
+  const PostException({required this.message});
+}
+
 class SendEmailException implements Exception {
   final String message;
   const SendEmailException({required this.message});

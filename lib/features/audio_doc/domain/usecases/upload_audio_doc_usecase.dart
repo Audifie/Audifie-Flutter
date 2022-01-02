@@ -7,9 +7,13 @@ import 'package:audifie_version_1/features/audio_doc/domain/repositories/audio_d
 import 'package:dartz/dartz.dart';
 
 class UploadAudioDocUsecase {
-  final AudioDocRepo audioDocRepo = sl<AudioDocRepo>();
+  final AudioDocRepo _audioDocRepo = sl<AudioDocRepo>();
 
-  Future<Either<Failure, Success>> uploadDoc(File doc) {
-    return audioDocRepo.uploadDoc(doc);
+  Future<File?> pickFile() {
+    return _audioDocRepo.pickFile();
+  }
+
+  Future<Either<Failure, Stream<int>>> uploadDoc(File doc) async {
+    return _audioDocRepo.uploadDoc(doc);
   }
 }
