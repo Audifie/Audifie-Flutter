@@ -164,28 +164,14 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
             centerTitle: true,
             leading: GestureDetector(
               onTap: () {
-                // TODO: Favourite function
-                // final String idToken = context
-                //     .read<PageSelectorNotifier>()
-                //     .authSession!
-                //     .userPoolTokens
-                //     .idToken;
-                // !widget.audioDocModel.isFavourite
-                //     ? context
-                //         .read<UploadNotifier>()
-                //         .addFavourite(widget.audioDocModel, idToken)
-                //     : context
-                //         .read<UploadNotifier>()
-                //         .removeFavourite(widget.audioDocModel, idToken);
+                // TODO: VoiceChange function
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: sc.width(20)),
+                padding: EdgeInsets.symmetric(horizontal: sc.width(10)),
                 alignment: Alignment.center,
-                child: Icon(
-                  widget.audioDoc.isFavourite
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  size: sc.height(20),
+                child: SvgPicture.asset(
+                  Strings.voiceChangeIcon,
+                  fit: BoxFit.contain,
                   color: Palette.primaryText,
                 ),
               ),
@@ -225,31 +211,24 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
               children: [
                 Expanded(
                   child: Container(
-                      padding: EdgeInsets.all(18),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Palette.textFieldBorder),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
-                        ),
+                    padding: EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Palette.textFieldBorder),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
                       ),
-                      child: Text(
-                        DummyUtil.dummyAudioText,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: 16,
-                          color: Palette.primaryText,
-                        ),
-                      )
-                      // ClipRRect(
-                      //   borderRadius: BorderRadius.all(
-                      //     Radius.circular(sc.height(5)),
-                      //   ),
-                      //   child: widget.audioDoc.imageUrl != null
-                      //       ? Image.network(widget.audioDoc.imageUrl!,
-                      //           fit: BoxFit.cover)
-                      //       : _emptyImage,
-                      // ),
+                    ),
+                    child: Text(
+                      DummyUtil.dummyAudioText,
+                      maxLines: 18,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        height: 1.5,
+                        fontSize: 16,
+                        color: Palette.primaryText,
                       ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: sc.height(36)),
                 StreamBuilder<Duration>(
@@ -300,88 +279,6 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                     ),
                   ],
                 ),
-                //SizedBox(height: sc.height(34)),
-                // Page no., Page Selector, Speed Selector
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-                //     Text(
-                //       _pageNo,
-                //       style: TStyle(
-                //         color: Palette.primaryText,
-                //         size: sc.text(14),
-                //       ).copyWith(fontWeight: FontWeight.w500),
-                //     ),
-                //     SizedBox(width: sc.width(12)),
-                //     StreamBuilder<PlaybackStateInfo>(
-                //         stream: context
-                //             .read<AudioDocNotifier>()
-                //             .playbackStateStream,
-                //         builder: (context, snapshot) {
-                //           if (snapshot.connectionState ==
-                //               ConnectionState.active) {
-                //             return Text(
-                //               snapshot.data!.queueIndex != null
-                //                   ? '${snapshot.data!.queueIndex! + 1}'
-                //                   : '',
-                //               style: TStyle(
-                //                 color: Palette.secondaryText,
-                //                 size: sc.text(14),
-                //               ).copyWith(fontWeight: FontWeight.w500),
-                //             );
-                //           }
-                //           return const SizedBox();
-                //         }),
-                //     SizedBox(width: sc.width(12)),
-                //     Text(
-                //       '/',
-                //       style: TStyle(
-                //         color: Palette.secondaryText,
-                //         size: sc.text(14),
-                //       ).copyWith(fontWeight: FontWeight.w500),
-                //     ),
-                //     SizedBox(width: sc.width(12)),
-                //     Text(
-                //       '${widget.audioDoc.pages.length}',
-                //       style: TStyle(
-                //         color: Palette.secondaryText,
-                //         size: sc.text(14),
-                //       ).copyWith(fontWeight: FontWeight.w500),
-                //     ),
-                //     Spacer(),
-                //     StreamBuilder<double>(
-                //       stream: context.read<AudioDocNotifier>().speedStream,
-                //       builder: (context, snapshot) {
-                //         if (snapshot.connectionState ==
-                //             ConnectionState.active) {
-                //           return _speedButton(context, snapshot.data);
-                //         }
-                //         return const SizedBox();
-                //       },
-                //     ),
-                //   ],
-                // ),
-                //SizedBox(height: sc.height(36)),
-                // StreamBuilder<Duration>(
-                //   stream: context.read<AudioDocNotifier>().positionStream,
-                //   builder: (_, snapshot) {
-                //     if (snapshot.data != null) {
-                //       return Slider.adaptive(
-                //         activeColor: Palette.primary,
-                //         inactiveColor: const Color(0xffCCCCCC),
-                //         min: 0,
-                //         max: _totalDuration.inSeconds.toDouble(),
-                //         value: snapshot.data!.inSeconds.toDouble(),
-                //         onChanged: (value) {
-                //           context
-                //               .read<AudioDocNotifier>()
-                //               .seek(Duration(seconds: value.toInt()));
-                //         },
-                //       );
-                //     }
-                //     return SizedBox();
-                //   },
-                // ),
                 SizedBox(height: sc.height(50)),
               ],
             ),
