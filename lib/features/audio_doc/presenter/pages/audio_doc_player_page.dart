@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:audifie_version_1/core/constants/palette.dart';
 import 'package:audifie_version_1/core/constants/strings.dart';
 import 'package:audifie_version_1/core/service_locator.dart';
@@ -163,43 +165,44 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
             centerTitle: true,
             leading: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                // TODO: Favourite function
+                // final String idToken = context
+                //     .read<PageSelectorNotifier>()
+                //     .authSession!
+                //     .userPoolTokens
+                //     .idToken;
+                // !widget.audioDocModel.isFavourite
+                //     ? context
+                //         .read<UploadNotifier>()
+                //         .addFavourite(widget.audioDocModel, idToken)
+                //     : context
+                //         .read<UploadNotifier>()
+                //         .removeFavourite(widget.audioDocModel, idToken);
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: sc.width(8)),
+                padding: EdgeInsets.symmetric(horizontal: sc.width(20)),
                 alignment: Alignment.center,
                 child: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  size: sc.height(32),
+                  widget.audioDoc.isFavourite
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  size: sc.height(20),
                   color: Palette.primaryText,
                 ),
               ),
             ),
+
             actions: [
               GestureDetector(
                 onTap: () {
-                  // TODO: Favourite function
-                  // final String idToken = context
-                  //     .read<PageSelectorNotifier>()
-                  //     .authSession!
-                  //     .userPoolTokens
-                  //     .idToken;
-                  // !widget.audioDocModel.isFavourite
-                  //     ? context
-                  //         .read<UploadNotifier>()
-                  //         .addFavourite(widget.audioDocModel, idToken)
-                  //     : context
-                  //         .read<UploadNotifier>()
-                  //         .removeFavourite(widget.audioDocModel, idToken);
+                  Navigator.pop(context);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: sc.width(20)),
+                  padding: EdgeInsets.symmetric(horizontal: sc.width(8)),
                   alignment: Alignment.center,
                   child: Icon(
-                    widget.audioDoc.isFavourite
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    size: sc.height(20),
+                    Icons.fullscreen_exit,
+                    size: sc.height(32),
                     color: Palette.primaryText,
                   ),
                 ),
@@ -237,6 +240,10 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Favorite
+                    IsFavoriteButton(
+                      audioDoc: widget.audioDoc,
+                    ),
                     // Skip to previous
                     SkipButton(isSkipNext: false),
                     // Play and Pause Button
@@ -425,6 +432,42 @@ class SkipButton extends StatelessWidget {
         }
         return const SizedBox();
       },
+    );
+  }
+}
+
+class IsFavoriteButton extends StatelessWidget {
+  final AudioDoc audioDoc;
+  const IsFavoriteButton({Key? key, required this.audioDoc}) : super(key: key);
+  static SizeConfig sc = sl<SizeConfig>();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // TODO: Favourite function
+        // final String idToken = context
+        //     .read<PageSelectorNotifier>()
+        //     .authSession!
+        //     .userPoolTokens
+        //     .idToken;
+        // !widget.audioDocModel.isFavourite
+        //     ? context
+        //         .read<UploadNotifier>()
+        //         .addFavourite(widget.audioDocModel, idToken)
+        //     : context
+        //         .read<UploadNotifier>()
+        //         .removeFavourite(widget.audioDocModel, idToken);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: sc.width(20)),
+        alignment: Alignment.center,
+        child: Icon(
+          audioDoc.isFavourite ? Icons.favorite : Icons.favorite_border,
+          size: sc.height(20),
+          color: Palette.primaryText,
+        ),
+      ),
     );
   }
 }
