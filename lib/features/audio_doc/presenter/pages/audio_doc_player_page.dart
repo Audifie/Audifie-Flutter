@@ -405,7 +405,6 @@ class IsFavoriteButton extends StatelessWidget {
         //         .removeFavourite(widget.audioDocModel, idToken);
       },
       child: Container(
-        //padding: EdgeInsets.symmetric(horizontal: sc.width(20)),
         alignment: Alignment.center,
         child: Icon(
           audioDoc.isFavourite ? Icons.favorite : Icons.favorite_border,
