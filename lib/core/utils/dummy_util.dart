@@ -11,6 +11,7 @@ class DummyUtil {
   static AudioDocModel _audioDocModel1 = AudioDocModel(
     fileId: '1',
     title: 'Audio 1',
+    subtitles: dummyAudioText,
     isProcessing: false,
     pages: [
       Strings.audioURL1,
@@ -22,6 +23,7 @@ class DummyUtil {
   static AudioDocModel _audioDocModel2 = AudioDocModel(
     fileId: '2',
     title: 'New audio from Droy',
+    subtitles: dummyAudioText,
     isProcessing: false,
     pages: [
       Strings.audioURL2,

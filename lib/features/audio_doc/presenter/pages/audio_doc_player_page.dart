@@ -211,6 +211,7 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
               children: [
                 Expanded(
                   child: Container(
+                    width: double.maxFinite,
                     padding: EdgeInsets.all(18),
                     decoration: BoxDecoration(
                       border: Border.all(color: Palette.textFieldBorder),
@@ -219,12 +220,12 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                       ),
                     ),
                     child: Text(
-                      DummyUtil.dummyAudioText,
+                      widget.audioDoc.subtitles,
                       maxLines: 18,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        height: 1.5,
-                        fontSize: 16,
+                        height: sc.height(1.75),
+                        fontSize: sc.text(18),
                         color: Palette.primaryText,
                       ),
                     ),

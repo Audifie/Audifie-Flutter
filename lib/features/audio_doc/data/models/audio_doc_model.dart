@@ -6,6 +6,7 @@ class AudioDocModel extends AudioDoc {
   AudioDocModel({
     required String fileId,
     required String title,
+    required String subtitles,
     String? imageUrl,
     required bool isProcessing,
     required List<String> pages,
@@ -13,6 +14,7 @@ class AudioDocModel extends AudioDoc {
   }) : super(
           fileId: fileId,
           title: title,
+          subtitles: subtitles,
           duration: const Duration(),
           imageUrl: imageUrl,
           fileUrl: null,
@@ -21,7 +23,7 @@ class AudioDocModel extends AudioDoc {
           isFavourite: isFavourite,
           file: null,
         );
-  
+
   static List<PageInfo> _getPageInfos(List<String> pages) {
     if (pages.isEmpty) return [];
     return pages.map((url) => PageInfo(url: url)).toList();
@@ -36,6 +38,7 @@ class AudioDocModel extends AudioDoc {
     return AudioDocModel(
       fileId: map['_id'] ?? DateTime.now().toString(),
       title: map['title'] ?? '-- Title --',
+      subtitles: map['subtitles'] ?? '-- Subtitles --',
       imageUrl: map['imageURL'] ?? null,
       isProcessing: map['processing'] ?? false,
       pages: [],

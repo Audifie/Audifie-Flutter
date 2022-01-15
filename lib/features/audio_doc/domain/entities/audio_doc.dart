@@ -7,6 +7,7 @@ import 'package:equatable/equatable.dart';
 class AudioDoc extends Equatable {
   final String fileId;
   final String title;
+  final String subtitles;
   Duration duration;
   final String? imageUrl;
   final String? fileUrl;
@@ -18,6 +19,7 @@ class AudioDoc extends Equatable {
   AudioDoc({
     required this.fileId,
     required this.title,
+    required this.subtitles,
     required this.duration,
     required this.imageUrl,
     required this.fileUrl,
