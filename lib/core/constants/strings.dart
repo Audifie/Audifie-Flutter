@@ -32,6 +32,7 @@ class Strings {
   static const twitterIcon = "assets/icons/twitterLogo.svg";
   static const clearIcon = "assets/icons/clearIcon.svg";
   static const surpriseBoxGif = "assets/images/surprisebox.gif";
+  static const voiceChangeIcon = "assets/icons/voice_change.svg";
 
   // Success
   static const otpSent = 'OTP sent to email';
@@ -92,16 +93,20 @@ class Strings {
   static const passwordCantEmpty = "Password field can not be empty";
   static const confirmPasswordCantEmpty = "Field can not be empty";
   static const fieldCantEmpty = "Field can not be empty";
-  static const processingTrySomeTime = "Document processing. Please retry after some time";
-  static const grantStoragePermission = "Grant storage permission for downloading file";
+  static const processingTrySomeTime =
+      "Document processing. Please retry after some time";
+  static const grantStoragePermission =
+      "Grant storage permission for downloading file";
   static const enterOtp = 'Please enter OTP';
   static const tryAgain = 'Please try again';
 
   // API links
   static const apiSignUp = 'http://3.109.49.60:8080/api/users/signup';
-  static const apiVerifyEmail = 'http://3.109.49.60:8080/api/users/verify-email';
+  static const apiVerifyEmail =
+      'http://3.109.49.60:8080/api/users/verify-email';
   static const apiLogin = 'http://3.109.49.60:8080/api/users/login';
-  static const apiGoogleLogin = 'http://3.109.49.60:8080/api/users/googlesignup';
+  static const apiGoogleLogin =
+      'http://3.109.49.60:8080/api/users/googlesignup';
   static const apiFacebookLogin = 'http://3.109.49.60:8080/api/users/fbsignup';
   static const apiCurrentUser = 'http://3.109.49.60:8080/api/users/current';
   static const apiLogout = 'http://3.109.49.60:8080/api/users/logout';
@@ -232,15 +237,15 @@ Another part of our priority is adding protection for children while using the i
 Audifie does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us immediately and we will do our best efforts to promptly remove such information from our records.
   """;
 
-static const disclaimer = """
+  static const disclaimer = """
 Audifie does not provide any warranties, express or implied, or make any representations regarding the use, or the results of use, of CONTENT, in terms of its correctness, legality, decency, accuracy, reliability, appropriateness or otherwise. Review and use of CONTENT are subject to all applicable laws and regulations and is solely at the risk of the individual or organization using this data. Audifie MAKES NO REPRESENTATIONS ABOUT THE SUITABILITY, RELIABILITY, AVAILABILITY, TIMELINESS, LACK OF VIRUSES OR OTHER HARMFUL COMPONENTS AND ACCURACY OF THE INFORMATION, SOFTWARE, PRODUCTS, SERVICES, GRAPHICS AND ANY OTHER MATERIAL AND CONTENT THAT YOU ACCESS VIA THE "SERVICE" FOR ANY PURPOSE. ALL SUCH INFORMATION, SOFTWARE, PRODUCTS, SERVICES, GRAPHICS, AND ANY OTHER MATERIAL AND CONTENT ARE PROVIDED ";AS IS"; WITHOUT WARRANTY OF ANY KIND. YOU EXPRESSLY UNDERSTAND AND AGREE THAT: a. YOUR USE OF THE "SERVICE" IS AT YOUR SOLE RISK. THE "SERVICE" IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. Audifie EXPRESSLY DISCLAIMS ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. b. Audifie MAKES NO WARRANTY THAT (i) THE "SERVICE" WILL MEET YOUR REQUIREMENTS, (ii) THE "SERVICE" WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE, (iii) THE RESULTS THAT MAY BE OBTAINED FROM THE USE OF THE"SERVICE" WILL BE ACCURATE OR RELIABLE, (iv) THE QUALITY OF ANY PRODUCTS, SERVICES, INFORMATION, OR OTHER MATERIAL PURCHASED OR OBTAINED BY YOU THROUGH THE "SERVICE" WILL MEET YOUR EXPECTATIONS, (v) ANY ERRORS IN THE SOFTWARE WILL BE CORRECTED, (vi) THE "CONTENT" OR ANY INFORMATION, SOFTWARE, PRODUCTS, SERVICES, GRAPHICS AND ANY OTHER MATERIAL DELIVERED TO YOU VIA THE "SERVICE" WILL HAVE NO VIRUSES OR OTHER HARMFUL COMPONENTS, AND (vii) THE USE OF USERNAMES, PASSWORDS, COOKIES AND OTHER DESIGN ELEMENTS OF THE WEBSITE WILL BE SECURE AND IMMUNE FROM SECURITY THREATS.c. THE USE OF COOKIES, USERNAMES AND PASSWORDS ON THE WEBSITE; YOUR PROVISION OF PERSONAL AND CONFIDENTIAL INFORMATION SUCH AS HOME ADDRESS, EMPLOYER INFORMATION, AND E-MAIL ADDRESSES; PLUS ALL OTHER FEATURES OF THIS WEBSITE INCLUDING, BUT NOT LIMITED TO, THE "REMEMBER ME" FACILITY : ANY AND ALL OF THESE FEATURES AND FACILITIES COULD POTENTIALLY EXPOSE YOU AND YOUR COMPUTER TO SECURITY THREATS. YOU SHOULD CONSIDER THESE RISKS BEFORE MAKING A DECISION TO ACCESS THIS WEBSITE AND ITS "CONTENT", AND TO USING ANY OF THE "SERVICES", ALL OF WHICH ARE PROVIDED SOLELY AT YOUR RISK.d. ANY "CONTENT" OR OTHER MATERIAL DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE USE OF THE "SERVICE" IS DONE AT YOUR DISCRETION AND RISK AND THAT YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGE TO YOUR COMPUTER SYSTEM OR LOSS OF DATA Audifie A THAT RESULTS FROM THE DOWNLOAD OF ANY SUCH MATERIAL. e. NO ADVICE OR INFORMATION, WHETHER ORAL OR WRITTEN, OBTAINED BY YOU FROM OR THROUGH OR FROM THE "SERVICE" SHALL CREATE ANY WARRANTY.YOU EXPRESSLY UNDERSTAND AND AGREE THAT Audifie SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO, DAMAGES FOR LOSS OF PROFITS, GOODWILL, USE, DATA OR OTHER INTANGIBLE LOSSES (EVEN IF Audifie.IN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES), RESULTING FROM: (i) THE USE OR THE INABILITY TO USE THE "SERVICE"; (ii) THE COST OF PROCUREMENT OF SUBSTITUTE GOODS AND SERVICES RESULTING FROM ANY GOODS, DATA, INFORMATION OR SERVICES PURCHASED OR OBTAINED OR MESSAGES RECEIVED OR TRANSACTIONS ENTERED INTO THROUGH OR FROM THE "SERVICE"; (iii) UNAUTHORIZED ACCESS TO OR ALTERATION OF YOUR TRANSMISSIONS OR DATA; (iv) STATEMENTS OR CONDUCT OF ANY THIRD PARTY ON THE "SERVICE"; OR (v) ANY OTHER MATTER RELATING TO THE"SERVICE".All materials are available at Audifie are contributed by users, and the ownership and copyright to the materials remain with the actual owner of the content. Audifie does not claim ownership of any materials or Intellectual Property.Materials shared at Audifie.in are available for educational purposes only. No claim for the originality of content is made. The contents are shared by the users to help other community members.
 """;
 
-static const copyRightPolicy = """
+  static const copyRightPolicy = """
 All pages, data, and graphics presented on this website are the property of Audife. or the Author of the content as specified. The pages and contents may not be redistributed or reproduced in any way, shape, or form without the written permission of Audifie. or the Author of the content. Audifie respects the copyrights, trademarks and intellectual property of others and we expect this from other users. If you find any information that is owned by you or any content that violates your intellectual property rights, please contact us at support@audifie.com with all necessary documents/information that authenticates your authority on your property.For all other policies, please read our Terms of use.
 """;
 
-static const termsAndConditions = """
+  static const termsAndConditions = """
 Welcome to Audifie!
 
 These terms and conditions outline the rules and regulations for the use of Audifie's Website, located at www.audifie.com.
@@ -365,5 +370,6 @@ We do not ensure that the information on this website is correct, we do not warr
   static const audioURL2 =
       "http://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg";
   static const pdf1 = "http://www.africau.edu/images/default/sample.pdf";
-  static const img1 = "https://i.pinimg.com/originals/f4/2e/bf/f42ebf98a9c13464aaf2593154dc4dd7.png";
+  static const img1 =
+      "https://i.pinimg.com/originals/f4/2e/bf/f42ebf98a9c13464aaf2593154dc4dd7.png";
 }

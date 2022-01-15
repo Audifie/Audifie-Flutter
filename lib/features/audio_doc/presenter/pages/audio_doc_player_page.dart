@@ -2,6 +2,7 @@ import 'package:audifie_version_1/core/constants/palette.dart';
 import 'package:audifie_version_1/core/constants/strings.dart';
 import 'package:audifie_version_1/core/service_locator.dart';
 import 'package:audifie_version_1/core/size_config.dart';
+import 'package:audifie_version_1/core/utils/dummy_util.dart';
 import 'package:audifie_version_1/core/widgets/core_widgets.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/entities/audio_doc.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/entities/playback_state_info.dart';
@@ -163,43 +164,30 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
             centerTitle: true,
             leading: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                // TODO: VoiceChange function
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: sc.width(8)),
+                padding: EdgeInsets.symmetric(horizontal: sc.width(10)),
                 alignment: Alignment.center,
-                child: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  size: sc.height(32),
+                child: SvgPicture.asset(
+                  Strings.voiceChangeIcon,
+                  fit: BoxFit.contain,
                   color: Palette.primaryText,
                 ),
               ),
             ),
+
             actions: [
               GestureDetector(
                 onTap: () {
-                  // TODO: Favourite function
-                  // final String idToken = context
-                  //     .read<PageSelectorNotifier>()
-                  //     .authSession!
-                  //     .userPoolTokens
-                  //     .idToken;
-                  // !widget.audioDocModel.isFavourite
-                  //     ? context
-                  //         .read<UploadNotifier>()
-                  //         .addFavourite(widget.audioDocModel, idToken)
-                  //     : context
-                  //         .read<UploadNotifier>()
-                  //         .removeFavourite(widget.audioDocModel, idToken);
+                  Navigator.pop(context);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: sc.width(20)),
+                  padding: EdgeInsets.symmetric(horizontal: sc.width(8)),
                   alignment: Alignment.center,
                   child: Icon(
-                    widget.audioDoc.isFavourite
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    size: sc.height(20),
+                    Icons.fullscreen_exit,
+                    size: sc.height(32),
                     color: Palette.primaryText,
                   ),
                 ),
@@ -222,89 +210,26 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
             child: Column(
               children: [
                 Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(sc.height(5)),
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Palette.textFieldBorder),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
                     ),
-                    child: widget.audioDoc.imageUrl != null
-                        ? Image.network(widget.audioDoc.imageUrl!,
-                            fit: BoxFit.cover)
-                        : _emptyImage,
-                  ),
-                ),
-                SizedBox(height: sc.height(36)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Skip to previous
-                    SkipButton(isSkipNext: false),
-                    // Play and Pause Button
-                    PlayButton(audioDoc: widget.audioDoc),
-                    // Skip to next
-                    SkipButton(isSkipNext: true),
-                  ],
-                ),
-                SizedBox(height: sc.height(34)),
-                // Page no., Page Selector, Speed Selector
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      _pageNo,
-                      style: TStyle(
+                    child: Text(
+                      widget.audioDoc.subtitles,
+                      maxLines: 18,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        height: sc.height(1.75),
+                        fontSize: sc.text(18),
                         color: Palette.primaryText,
-                        size: sc.text(14),
-                      ).copyWith(fontWeight: FontWeight.w500),
+                      ),
                     ),
-                    SizedBox(width: sc.width(12)),
-                    StreamBuilder<PlaybackStateInfo>(
-                        stream: context
-                            .read<AudioDocNotifier>()
-                            .playbackStateStream,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.active) {
-                            return Text(
-                              snapshot.data!.queueIndex != null
-                                  ? '${snapshot.data!.queueIndex! + 1}'
-                                  : '',
-                              style: TStyle(
-                                color: Palette.secondaryText,
-                                size: sc.text(14),
-                              ).copyWith(fontWeight: FontWeight.w500),
-                            );
-                          }
-                          return const SizedBox();
-                        }),
-                    SizedBox(width: sc.width(12)),
-                    Text(
-                      '/',
-                      style: TStyle(
-                        color: Palette.secondaryText,
-                        size: sc.text(14),
-                      ).copyWith(fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(width: sc.width(12)),
-                    Text(
-                      '${widget.audioDoc.pages.length}',
-                      style: TStyle(
-                        color: Palette.secondaryText,
-                        size: sc.text(14),
-                      ).copyWith(fontWeight: FontWeight.w500),
-                    ),
-                    Spacer(),
-                    StreamBuilder<double>(
-                      stream: context.read<AudioDocNotifier>().speedStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.active) {
-                          return _speedButton(context, snapshot.data);
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  ],
+                  ),
                 ),
                 SizedBox(height: sc.height(36)),
                 StreamBuilder<Duration>(
@@ -327,7 +252,35 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                     return SizedBox();
                   },
                 ),
-                SizedBox(height: sc.height(40)),
+                SizedBox(height: sc.height(36)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Favorite
+                    IsFavoriteButton(
+                      audioDoc: widget.audioDoc,
+                    ),
+                    // Skip to previous
+                    SkipButton(isSkipNext: false),
+                    // Play and Pause Button
+                    PlayButton(audioDoc: widget.audioDoc),
+                    // Skip to next
+                    SkipButton(isSkipNext: true),
+                    // Speed Button
+                    StreamBuilder<double>(
+                      stream: context.read<AudioDocNotifier>().speedStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+                          return _speedButton(context, snapshot.data);
+                        }
+                        return const SizedBox();
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: sc.height(50)),
               ],
             ),
           ),
@@ -425,6 +378,41 @@ class SkipButton extends StatelessWidget {
         }
         return const SizedBox();
       },
+    );
+  }
+}
+
+class IsFavoriteButton extends StatelessWidget {
+  final AudioDoc audioDoc;
+  const IsFavoriteButton({Key? key, required this.audioDoc}) : super(key: key);
+  static SizeConfig sc = sl<SizeConfig>();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // TODO: Favourite function
+        // final String idToken = context
+        //     .read<PageSelectorNotifier>()
+        //     .authSession!
+        //     .userPoolTokens
+        //     .idToken;
+        // !widget.audioDocModel.isFavourite
+        //     ? context
+        //         .read<UploadNotifier>()
+        //         .addFavourite(widget.audioDocModel, idToken)
+        //     : context
+        //         .read<UploadNotifier>()
+        //         .removeFavourite(widget.audioDocModel, idToken);
+      },
+      child: Container(
+        alignment: Alignment.center,
+        child: Icon(
+          audioDoc.isFavourite ? Icons.favorite : Icons.favorite_border,
+          size: sc.height(30),
+          color: Palette.primaryText,
+        ),
+      ),
     );
   }
 }
