@@ -114,6 +114,8 @@ class Strings {
   static const apiFavourite = 'http://3.109.49.60:8080/api/documents/edit/';
   static const apiDeleteDoc = 'http://3.109.49.60:8080/api/documents/delete/';
   static const apiUploadDoc = 'http://3.109.49.60:8080/api/documents/upload';
+  static const apiGetAudioDetails =
+      'http://3.109.49.60:8080/api/documents/get-audio-details/';
   // static const userFilesAPILink =
   //     "https://gt8u1r94bf.execute-api.ap-south-1.amazonaws.com/dev/userfiles";
   // static const allFilesAPILink =
