@@ -11,24 +11,20 @@ class DummyUtil {
   static AudioDocModel _audioDocModel1 = AudioDocModel(
     fileId: '1',
     title: 'Audio 1',
-    subtitles: dummyAudioText,
     isProcessing: false,
-    pages: [
-      Strings.audioURL1,
-      Strings.audioURL2,
-    ],
+    audioURL: Strings.audioURL1,
+    speechURL: null,
+    imageURL: null,
     isFavourite: false,
   );
 
   static AudioDocModel _audioDocModel2 = AudioDocModel(
     fileId: '2',
     title: 'New audio from Droy',
-    subtitles: dummyAudioText,
     isProcessing: false,
-    pages: [
-      Strings.audioURL2,
-      Strings.audioURL1,
-    ],
+    audioURL: Strings.audioURL2,
+    speechURL: null,
+    imageURL: null,
     isFavourite: false,
   );
 

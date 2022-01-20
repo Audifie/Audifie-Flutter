@@ -146,17 +146,25 @@ class AudioPlayerServiceImpl implements AudioPlayerService {
   }
 
   List<MediaItem> _getMediaItemsFromPagesInAudioDoc(AudioDoc audioDoc) {
-    if (audioDoc.pages.isEmpty) return [];
-    final List<MediaItem> mediaItems = audioDoc.pages
-        .asMap()
-        .entries
-        .map((e) => MediaItem(
-              id: e.value.url,
-              title: audioDoc.title,
-              displayTitle: audioDoc.title,
-              displaySubtitle: _getPageNum(e.key),
-            ))
-        .toList();
+    if (audioDoc.audioURL == null) return [];
+    // final List<MediaItem> mediaItems = audioDoc.au
+    //     .asMap()
+    //     .entries
+    //     .map((e) => MediaItem(
+    //           id: e.value.url,
+    //           title: audioDoc.title,
+    //           displayTitle: audioDoc.title,
+    //           displaySubtitle: _getPageNum(e.key),
+    //         ))
+    //     .toList();
+    final List<MediaItem> mediaItems = [];
+    mediaItems.add(
+      MediaItem(
+        id: audioDoc.audioURL!,
+        title: audioDoc.title,
+        displayTitle: audioDoc.title,
+      ),
+    );
 
     return mediaItems;
   }

@@ -7,26 +7,22 @@ import 'package:equatable/equatable.dart';
 class AudioDoc extends Equatable {
   final String fileId;
   final String title;
-  final String subtitles;
+  String? audioURL;
+  String? speechURL;
   Duration duration;
-  final String? imageUrl;
-  final String? fileUrl;
   final ProgressStateEnum progressState;
-  final List<PageInfo> pages;
   bool isFavourite;
-  File? file;
+  final String? imageURL;
 
   AudioDoc({
     required this.fileId,
     required this.title,
-    required this.subtitles,
+    required this.audioURL,
+    required this.speechURL,
     required this.duration,
-    required this.imageUrl,
-    required this.fileUrl,
     required this.progressState,
-    required this.pages,
     required this.isFavourite,
-    required this.file,
+    required this.imageURL,
   });
 
   @override

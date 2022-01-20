@@ -148,12 +148,12 @@ class _BaseHomePageState extends State<BaseHomePage> {
                                 children: [
                                   Container(
                                     width: sc.width(61),
-                                    child: notifier.currentlyPlayingAudioDoc!.imageUrl != null
+                                    child: notifier.currentlyPlayingAudioDoc!.imageURL != null
                                         ? ClipRRect(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(1)),
                                             child: Image.network(
-                                                notifier.currentlyPlayingAudioDoc!.imageUrl!,
+                                                notifier.currentlyPlayingAudioDoc!.imageURL!,
                                                 fit: BoxFit.cover),
                                           )
                                         : LayoutBuilder(

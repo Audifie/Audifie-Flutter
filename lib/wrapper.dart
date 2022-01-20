@@ -25,18 +25,6 @@ class _WrapperState extends State<Wrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            AudioDocRemoteDataSourceImpl().getAudioDoc('61dd9e3d51ec5d0a34b5f15f');
-            // AudioDocRemoteDataSourceImpl().getAllAudioDocs();
-          },
-          child: Text('get audio doc details test'),
-        ),
-      ),
-    );
-
     return Consumer<AuthNotifier>(
       builder: (_, notifier, child) {
         return notifier.isAuthDone ? BaseHomePage() : AuthWrapper();

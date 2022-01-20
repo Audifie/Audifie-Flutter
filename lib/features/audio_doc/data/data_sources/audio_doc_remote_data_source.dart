@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:audifie_version_1/core/constants/strings.dart';
@@ -7,12 +6,10 @@ import 'package:audifie_version_1/core/errors/exception.dart';
 import 'package:audifie_version_1/core/service_locator.dart';
 import 'package:audifie_version_1/features/audio_doc/data/models/audio_doc_model.dart';
 import 'package:dio/dio.dart';
-import 'package:path/path.dart';
-import 'package:http/http.dart' as http;
 
 abstract class AudioDocRemoteDataSource {
   Future<List<AudioDocModel>> getAllAudioDocs();
-  Future<void> getAudioDoc(String fileId);
+  Future<AudioDocModel> getAudioDoc(AudioDocModel audioDocModel);
   Future<Stream<int>> uploadDoc(String accessToken, File doc);
   Future<void> changeFavouriteTo(String fileId, bool favourite);
   Future<void> deleteAudioDoc(String fileId);
@@ -27,7 +24,6 @@ class AudioDocRemoteDataSourceImpl implements AudioDocRemoteDataSource {
       final List<AudioDocModel> audioDocModels = [];
       final Response result = await _dio.get(Strings.apiGetAllDocs);
       final List list = result.data;
-      print('Result: $list');
       for (int i = 0; i < list.length; i++) {
         Map<String, dynamic> map = list[i] as Map<String, dynamic>;
         audioDocModels.add(AudioDocModel.fromMap(map));
@@ -38,18 +34,22 @@ class AudioDocRemoteDataSourceImpl implements AudioDocRemoteDataSource {
     }
   }
 
-//audioUrl
-//speechUrl
+  // ** This new function is added to get details of each audio doc **
   @override
-  Future<void> getAudioDoc(String fileId) async {
+  Future<AudioDocModel> getAudioDoc(AudioDocModel audioDocModel) async {
     try {
+      final String fileId = audioDocModel.fileId;
       final Response result = await _dio.get(Strings.apiGetDoc + fileId);
-      print('Result: ${result.data}');
+      final Map<String, dynamic> map = result.data as Map<String, dynamic>;
+      final AudioDocModel updatedAudioDocModel = AudioDocModel.fromMapToGetAudioDoc(audioDocModel, map);
+      return updatedAudioDocModel;
     } on DioError catch (e) {
-      print('Dio error: $e');
-      print('Error: ${e.response!.data['message']}');
+      print('Error in [AudioDocRemoteDataSource] [getAudioDoc] [DioError]: $e');
+      print('Dio error message: ${e.response!.data['message']}');
+      throw GetException(message: 'There was some error. Please try again');
     } catch (e) {
       print('Error in [AudioDocRemoteDataSource] [getAudioDoc]: $e');
+      throw GetException(message: 'There was some error. Please try again');
     }
   }
 

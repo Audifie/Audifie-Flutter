@@ -6,6 +6,7 @@ import 'package:audifie_version_1/features/audio_doc/data/models/audio_doc_model
 import 'package:audifie_version_1/features/audio_doc/domain/entities/audio_doc.dart';
 import 'package:audifie_version_1/core/errors/success.dart';
 import 'package:audifie_version_1/core/errors/failure.dart';
+import 'package:audifie_version_1/features/audio_doc/domain/entities/progress_state_enum.dart';
 import 'dart:io';
 
 import 'package:audifie_version_1/features/audio_doc/domain/repositories/audio_doc_repo.dart';
@@ -27,10 +28,26 @@ class AudioDocRepoImpl implements AudioDocRepo {
     }
   }
 
+  static bool _isProcessing(ProgressStateEnum progressStateEnum) {
+    return progressStateEnum == ProgressStateEnum.complete;
+  }
+
   @override
-  Future<Either<Failure, AudioDoc>> getAudioDoc(AudioDoc audioDoc) {
-    // TODO: implement getAudioDoc
-    throw UnimplementedError();
+  Future<Either<Failure, AudioDoc>> getAudioDoc(AudioDoc audioDoc) async {
+    try {
+      final AudioDocModel audioDocModel = AudioDocModel(
+        fileId: audioDoc.fileId,
+        title: audioDoc.title,
+        audioURL: audioDoc.audioURL,
+        speechURL: audioDoc.speechURL,
+        isFavourite: audioDoc.isFavourite,
+        isProcessing: _isProcessing(audioDoc.progressState),
+        imageURL: audioDoc.imageURL,
+      );
+      return Right(await _audioDocRemoteDataSource.getAudioDoc(audioDocModel));
+    } on GetException catch (e) {
+      return Left(GetFailure(message: e.message));
+    }
   }
 
   @override

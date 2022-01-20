@@ -103,6 +103,7 @@ class _AudioDocCardState extends State<AudioDocCard> {
       children: [
         GestureDetector(
           onTap: () async {
+            await context.read<AudioDocNotifier>().getAudioDoc(context, widget.audioDoc);
             Navigator.pushNamed(context, AudioDocPlayerPage.routeName,
                 arguments: widget.audioDoc);
           },
@@ -122,8 +123,8 @@ class _AudioDocCardState extends State<AudioDocCard> {
                       horizontal: sc.width(4),
                       vertical: sc.height(4),
                     ),
-                    child: widget.audioDoc.imageUrl != null
-                        ? Image.network(widget.audioDoc.imageUrl!)
+                    child: widget.audioDoc.imageURL != null
+                        ? Image.network(widget.audioDoc.imageURL!)
                         : LayoutBuilder(
                             builder: (_, constraints) => ImagePlaceholder(
                               width: constraints.maxWidth,
@@ -226,6 +227,7 @@ class _AudioDocCardState extends State<AudioDocCard> {
                               builder: (context, notifier, child) {
                                 return ElevatedButton(
                                   onPressed: () async {
+                                    await context.read<AudioDocNotifier>().getAudioDoc(context, widget.audioDoc);
                                     // TODO: Play button function
                                     if (notifier.currentlyPlayingAudioDoc !=
                                         null) {

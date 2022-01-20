@@ -220,7 +220,9 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                       ),
                     ),
                     child: Text(
-                      widget.audioDoc.subtitles,
+                      // widget.audioDoc.subtitles,
+                      // TODO: Extract text from speechURL
+                      'The text in this section will come from speechURL field in AudioDoc entity',
                       maxLines: 18,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

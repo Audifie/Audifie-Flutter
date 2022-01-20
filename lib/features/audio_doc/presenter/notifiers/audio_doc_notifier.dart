@@ -74,11 +74,38 @@ class AudioDocNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getAudioDoc(BuildContext context, AudioDoc audioDoc) async {
+    if (audioDoc.audioURL != null) return;
+
+    print('Not working above statement');
+
+    _isLoading = true;
+    notifyListeners();
+
+    await _getAudioDocUsecase.getAudioDoc(audioDoc)
+      ..fold((l) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(Snackbar(message: l.message));
+      }, (r) {
+        // ** Updating the audioURL and speechURL **
+        for (int i = 0; i < _audioDocs.length; i++) {
+          if (_audioDocs[i].fileId == r.fileId) {
+            _audioDocs[i].audioURL = r.audioURL;
+            _audioDocs[i].speechURL = r.speechURL;
+            break;
+          }
+        }
+      });
+    
+    _isLoading = false;
+    notifyListeners();
+  }
+
   Future<Stream<int>?> uploadAudioDoc(BuildContext context) async {
     final File? doc = await _uploadAudioDocUsecase.pickFile();
     if (doc != null) {
       ScaffoldMessenger.of(context)
-              .showSnackBar(Snackbar(message: 'Uploading file'));
+          .showSnackBar(Snackbar(message: 'Uploading file'));
       await _uploadAudioDocUsecase.uploadDoc(doc)
         ..fold((l) {
           ScaffoldMessenger.of(context)
@@ -89,7 +116,8 @@ class AudioDocNotifier extends ChangeNotifier {
           return r;
         });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(Snackbar(message: 'No file selected'));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(Snackbar(message: 'No file selected'));
     }
   }
 
