@@ -232,102 +232,106 @@ class SettingsPage extends StatelessWidget {
           backgroundColor: Palette.bg,
           body: Stack(
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: sc.width(_horizontalPadding)),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: [
-                    // SizedBox(height: sc.height(51)),
-                    // SvgPicture.asset(
-                    //   Strings.audifieTextIcon,
-                    //   color: Palette.primary,
-                    //   width: sc.width(111),
-                    //   height: sc.height(24),
-                    // ),
-                    SizedBox(height: sc.height(32)),
-                    _profileCard(DummyUtil.profileInfo),
-                    SizedBox(height: sc.height(47)),
-                    // Buttons
-                    Row(
-                      children: [
-                        // Edit
-                        Expanded(
-                          child: _button(
-                            icon: Strings.editIcon,
-                            title: _editProfile,
-                            onTap: () {},
+              SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: sc.width(_horizontalPadding)),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    children: [
+                      // SizedBox(height: sc.height(51)),
+                      // SvgPicture.asset(
+                      //   Strings.audifieTextIcon,
+                      //   color: Palette.primary,
+                      //   width: sc.width(111),
+                      //   height: sc.height(24),
+                      // ),
+                      SizedBox(height: sc.height(32)),
+                      _profileCard(DummyUtil.profileInfo),
+                      SizedBox(height: sc.height(47)),
+                      // Buttons
+                      Row(
+                        children: [
+                          // Edit
+                          Expanded(
+                            child: _button(
+                              icon: Strings.editIcon,
+                              title: _editProfile,
+                              onTap: () {},
+                            ),
                           ),
-                        ),
-                        SizedBox(width: sc.width(14)),
-                        // Change password
-                        Expanded(
-                          child: _button(
-                            icon: Strings.passwordIcon,
-                            title: _changePassword,
-                            onTap: () {
-                              Navigator.pushNamed(context, ChangePasswordPage.routeName);
-                            },
+                          SizedBox(width: sc.width(14)),
+                          // Change password
+                          Expanded(
+                            child: _button(
+                              icon: Strings.passwordIcon,
+                              title: _changePassword,
+                              onTap: () {
+                                Navigator.pushNamed(context, ChangePasswordPage.routeName);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: sc.height(15)),
-                    Row(
-                      children: [
-                        // Transections
-                        Expanded(
-                          child: _button(
-                            icon: Strings.historyIcon,
-                            title: _transections,
-                            onTap: () {
-                              Navigator.pushNamed(context, TransectionsPage.routeName);
-                            },
+                        ],
+                      ),
+                      SizedBox(height: sc.height(15)),
+                      Row(
+                        children: [
+                          // Transections
+                          Expanded(
+                            child: _button(
+                              icon: Strings.historyIcon,
+                              title: _transections,
+                              onTap: () {
+                                Navigator.pushNamed(context, TransectionsPage.routeName);
+                              },
+                            ),
                           ),
-                        ),
-                        SizedBox(width: sc.width(14)),
-                        // Support
-                        Expanded(
-                          child: _button(
-                            icon: Strings.supportIcon,
-                            title: _support,
-                            onTap: () {
-                              Navigator.pushNamed(context, SupportPage.routeName);
-                            },
+                          SizedBox(width: sc.width(14)),
+                          // Support
+                          Expanded(
+                            child: _button(
+                              icon: Strings.supportIcon,
+                              title: _support,
+                              onTap: () {
+                                Navigator.pushNamed(context, SupportPage.routeName);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: sc.height(15)),
-                    Row(
-                      children: [
-                        // Privacy and Terms
-                        Expanded(
-                          child: _button(
-                            icon: Strings.privacyIcon,
-                            title: _privacyTerms,
-                            onTap: () {
-                              Navigator.pushNamed(context, PrivacyPolicyPage.routeName);
-                            },
+                        ],
+                      ),
+                      SizedBox(height: sc.height(15)),
+                      Row(
+                        children: [
+                          // Privacy and Terms
+                          Expanded(
+                            child: _button(
+                              icon: Strings.privacyIcon,
+                              title: _privacyTerms,
+                              onTap: () {
+                                Navigator.pushNamed(context, PrivacyPolicyPage.routeName);
+                              },
+                            ),
                           ),
-                        ),
-                        SizedBox(width: sc.width(14)),
-                        // About
-                        Expanded(
-                          child: _button(
-                            icon: Strings.aboutIcon,
-                            title: _about,
-                            onTap: () {
-                              Navigator.pushNamed(context, AboutPage.routeName);
-                            },
+                          SizedBox(width: sc.width(14)),
+                          // About
+                          Expanded(
+                            child: _button(
+                              icon: Strings.aboutIcon,
+                              title: _about,
+                              onTap: () {
+                                Navigator.pushNamed(context, AboutPage.routeName);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: sc.height(57)),
-                    // Logout
-                    _logoutBtn(context),
-                  ],
+                        ],
+                      ),
+                      SizedBox(height: sc.height(57)),
+                      // Logout
+                      _logoutBtn(context),
+                      SizedBox(height: sc.height(200)),
+                    ],
+                  ),
                 ),
               ),
               // TODO: Loading

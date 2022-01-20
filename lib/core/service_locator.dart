@@ -19,7 +19,6 @@ import 'package:audio_service/audio_service.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,7 +34,7 @@ Future<void> setUpServices() async {
   sl.registerSingleton<AudioPlayer>(AudioPlayer());
   sl.registerSingleton<AudioHandler>(await initAudioService());
   sl.registerSingleton<FilePicker>(FilePicker.platform);
-  sl.registerSingleton<GoogleSignIn>(GoogleSignIn());
+  // sl.registerSingleton<GoogleSignIn>(GoogleSignIn());
   // sl.registerSingleton<FacebookAuth>(FacebookAuth.instance);
 
   // Services

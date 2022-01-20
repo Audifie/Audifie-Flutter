@@ -29,20 +29,9 @@ class _HomePageState extends State<HomePage> {
 
   static final SizeConfig sc = sl<SizeConfig>();
 
-  late StreamController<int> _uploadStreamController;
-
   @override
   void initState() {
     super.initState();
-
-    _uploadStreamController = StreamController<int>();
-    if (_uploadStreamController.hasListener) {
-      _uploadStreamController.stream.listen((value) {
-        if (value == 100) {
-          _uploadStreamController.stream.drain();
-        }
-      });
-    }
   }
 
   @override
@@ -71,29 +60,17 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   SizedBox(height: sc.height(104)),
                   // Upload button
-                  StreamBuilder<int>(
-                      stream: _uploadStreamController.stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.active) {
-                          return UploadButton(
-                            isUploading: true,
-                            onCancelClicked: () {
-                              _uploadStreamController.stream.drain();
-                            },
-                            value: snapshot.data,
-                          );
-                        }
-                        return UploadButton(
-                          isUploading: false,
-                          onUploadClicked: () {
-                            final Stream<int> stream =
-                                AudioDocRemoteDataSourceImpl()
-                                    .generateTestStream();
-                            _uploadStreamController.addStream(stream);
-                          },
-                        );
-                      }),
+                  Consumer<AudioDocNotifier>(
+                    builder: (context, notifier, chlid) {
+                      return UploadButton(
+                        isUploading: notifier.isUploadingFile,
+                        onUploadClicked: () {
+                          context.read<AudioDocNotifier>().uploadAudioDoc(context);
+                        },
+                        onCancelClicked: () {},
+                      );
+                    }
+                  ),
                   SizedBox(height: sc.height(93)),
                   // Document list
                   audioDocNotifier.audioDocs.isNotEmpty

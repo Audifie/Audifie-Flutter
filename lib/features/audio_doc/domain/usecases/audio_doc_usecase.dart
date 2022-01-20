@@ -25,5 +25,7 @@ class AudioDocUsecase {
   Future<void> skipToPrevious() => audioPlayerService.skipToPrevious();
   Future<void> skipToNext() => audioPlayerService.skipToNext();
   Future<void> setSpeed(double speed) => audioPlayerService.setSpeed(speed);
+  Future<void> fastForward() => audioPlayerService.fastForward();
+  Future<void> rewind() => audioPlayerService.rewind();
   Future<void> stop() => audioPlayerService.stop();
 }

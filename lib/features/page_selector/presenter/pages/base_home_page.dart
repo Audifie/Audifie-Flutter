@@ -117,6 +117,7 @@ class _BaseHomePageState extends State<BaseHomePage> {
     final int currentPageIndex = pageSelectorNotifier.currentPageIndex;
 
     return Scaffold(
+      backgroundColor: Palette.bg,
       body: Stack(
         fit: StackFit.expand,
         alignment: Alignment.center,
@@ -127,90 +128,92 @@ class _BaseHomePageState extends State<BaseHomePage> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: ClipRRect(
-              borderRadius: BorderRadius.zero,
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                child: Consumer<AudioDocNotifier>(
-                  builder: (context, notifier, child) {
-                    return notifier.currentlyPlayingAudioDoc != null
-                        ? GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, AudioDocPlayerPage.routeName, arguments: notifier.currentlyPlayingAudioDoc!);
-                          },
-                          child: Container(
+            child: Consumer<AudioDocNotifier>(
+              builder: (context, notifier, child) {
+                return notifier.currentlyPlayingAudioDoc != null
+                    ? GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, AudioDocPlayerPage.routeName,
+                              arguments:
+                                  notifier.currentlyPlayingAudioDoc!);
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.zero,
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Container(
                               height: sc.height(111),
-                              color: Palette.audioDocCardBg.withOpacity(.85),
                               padding: EdgeInsets.symmetric(
-                                  vertical: sc.height(9),
-                                  horizontal: sc.width(26)),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: sc.width(61),
-                                    child: notifier.currentlyPlayingAudioDoc!.imageURL != null
-                                        ? ClipRRect(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(1)),
-                                            child: Image.network(
-                                                notifier.currentlyPlayingAudioDoc!.imageURL!,
-                                                fit: BoxFit.cover),
-                                          )
-                                        : LayoutBuilder(
-                                            builder: (_, constraints) {
-                                              return ImagePlaceholder(
-                                                width: constraints.maxWidth,
-                                                height: constraints.maxHeight,
-                                              );
-                                            },
-                                          ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      // crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          notifier
-                                              .currentlyPlayingAudioDoc!.title,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TStyle(
-                                            color: Palette.primaryText,
-                                            size: sc.text(14),
-                                          ),
-                                        ),
-                                        SizedBox(height: sc.height(12)),
-                                        StreamBuilder<PlaybackStateInfo>(
-                                          stream: context.read<AudioDocNotifier>().playbackStateStream,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.active) {
-                                              return Text(
-                                                'Page - ${(snapshot.data!.queueIndex != null) ? snapshot.data!.queueIndex! + 1 : 0}',
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TStyle(
-                                                  color: Palette.secondaryText,
-                                                  size: sc.text(12),
-                                                ),
-                                              );
-                                            }
-                                            return const SizedBox();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  _PlayButton(
-                                      audioDoc:
-                                          notifier.currentlyPlayingAudioDoc!),
-                                ],
+                                vertical: sc.height(9),
+                                horizontal: sc.width(26),
                               ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade700.withOpacity(.1)
+                                // color: Palette.audioDocCardBg.withOpacity(.85),
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //     offset: Offset(0, 0),
+                                //     color: Palette.audioDocCardBg.withOpacity(.25),
+                                //     blurRadius: sc.height(4),
+                                //   ),
+                                // ],
+                              ),
+                              child: Row(
+                                    children: [
+                                      Container(
+                                        width: sc.width(61),
+                                        child: notifier.currentlyPlayingAudioDoc!
+                                                    .imageURL !=
+                                                null
+                                            ? ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(1)),
+                                                child: Image.network(
+                                                    notifier
+                                                        .currentlyPlayingAudioDoc!
+                                                        .imageURL!,
+                                                    fit: BoxFit.cover),
+                                              )
+                                            : LayoutBuilder(
+                                                builder: (_, constraints) {
+                                                  return ImagePlaceholder(
+                                                    width: constraints.maxWidth,
+                                                    height: constraints.maxHeight,
+                                                  );
+                                                },
+                                              ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          // crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              notifier
+                                                  .currentlyPlayingAudioDoc!.title,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TStyle(
+                                                color: Palette.primaryText,
+                                                size: sc.text(14),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      _PlayButton(
+                                        audioDoc:
+                                            notifier.currentlyPlayingAudioDoc!,
+                                      ),
+                                    ],
+                                  ),
                             ),
-                        )
-                        : const SizedBox();
-                  },
-                ),
-              ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox();
+              },
             ),
           ),
         ],
@@ -268,14 +271,12 @@ class _PlayButton extends StatelessWidget {
               (snapshot.data != null) ? snapshot.data!.isPlaying : false;
           return InkWell(
             onTap: () {
-              // TODO: Player
               isPlaying
                   ? context.read<AudioDocNotifier>().pause()
                   : context.read<AudioDocNotifier>().play(audioDoc);
             },
             borderRadius: BorderRadius.circular(sc.height(100)),
             child: Icon(
-              //TODO: ------
               isPlaying ? Icons.pause : Icons.play_arrow,
               size: sc.height(34),
               color: Palette.primaryText,

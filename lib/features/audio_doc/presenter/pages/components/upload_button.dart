@@ -10,13 +10,11 @@ class UploadButton extends StatelessWidget {
   final bool isUploading;
   final Function()? onUploadClicked;
   final Function()? onCancelClicked;
-  final int? value;
   const UploadButton({
     Key? key,
     required this.isUploading,
     this.onUploadClicked,
     this.onCancelClicked,
-    this.value,
   }) : super(key: key);
 
   static final SizeConfig sc = sl<SizeConfig>();
@@ -76,15 +74,8 @@ class UploadButton extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(
-                  Strings.uploadIcon,
-                  width: sc.height(20),
-                  height: sc.height(20),
-                  color: Palette.primaryText,
-                ),
-                SizedBox(width: sc.width(20)),
                 Text(
-                  '$value',
+                  'Uploading...',
                   style: TStyle(
                     color: Palette.primaryText,
                     size: sc.text(18),

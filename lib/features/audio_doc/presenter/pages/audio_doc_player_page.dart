@@ -270,11 +270,15 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                       },
                     ),
                     // Skip to previous
-                    SkipButton(isSkipNext: false),
+                    // SkipButton(isSkipNext: false),
+                    // Fast forward
+                    Forward(isFastForward: false),
                     // Play and Pause Button
                     PlayButton(audioDoc: widget.audioDoc),
                     // Skip to next
-                    SkipButton(isSkipNext: true),
+                    // SkipButton(isSkipNext: true),
+                    // Rewind
+                    Forward(isFastForward: true),
                     // Speed Button
                     StreamBuilder<double>(
                       stream: context.read<AudioDocNotifier>().speedStream,
@@ -378,6 +382,45 @@ class SkipButton extends StatelessWidget {
               ),
               child: Icon(
                 isSkipNext ? Icons.skip_next : Icons.skip_previous,
+                size: sc.height(34),
+                color: Palette.primaryText,
+              ),
+            ),
+          );
+        }
+        return const SizedBox();
+      },
+    );
+  }
+}
+
+class Forward extends StatelessWidget {
+  final bool isFastForward;
+  const Forward({required this.isFastForward});
+
+  static SizeConfig sc = sl<SizeConfig>();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<PlaybackStateInfo>(
+      stream: context.read<AudioDocNotifier>().playbackStateStream,
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active ||
+            snapshot.connectionState == ConnectionState.waiting) {
+          return InkWell(
+            onTap: isFastForward
+                ? context.read<AudioDocNotifier>().fastForward
+                : context.read<AudioDocNotifier>().rewind,
+            borderRadius: BorderRadius.circular(sc.height(100)),
+            child: Container(
+              height: sc.height(64),
+              width: sc.height(64),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                isFastForward ? Icons.fast_forward : Icons.fast_rewind,
                 size: sc.height(34),
                 color: Palette.primaryText,
               ),

@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:audifie_version_1/core/constants/strings.dart';
 import 'package:audifie_version_1/core/errors/exception.dart';
 import 'package:audifie_version_1/core/service_locator.dart';
 import 'package:audifie_version_1/features/audio_doc/data/models/audio_doc_model.dart';
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 abstract class AudioDocRemoteDataSource {
   Future<List<AudioDocModel>> getAllAudioDocs();
   Future<AudioDocModel> getAudioDoc(AudioDocModel audioDocModel);
-  Future<Stream<int>> uploadDoc(String accessToken, File doc);
+  Future<void> uploadDoc(String accessToken, File doc);
   Future<void> changeFavouriteTo(String fileId, bool favourite);
   Future<void> deleteAudioDoc(String fileId);
 }
@@ -41,7 +44,8 @@ class AudioDocRemoteDataSourceImpl implements AudioDocRemoteDataSource {
       final String fileId = audioDocModel.fileId;
       final Response result = await _dio.get(Strings.apiGetDoc + fileId);
       final Map<String, dynamic> map = result.data as Map<String, dynamic>;
-      final AudioDocModel updatedAudioDocModel = AudioDocModel.fromMapToGetAudioDoc(audioDocModel, map);
+      final AudioDocModel updatedAudioDocModel =
+          AudioDocModel.fromMapToGetAudioDoc(audioDocModel, map);
       return updatedAudioDocModel;
     } on DioError catch (e) {
       print('Error in [AudioDocRemoteDataSource] [getAudioDoc] [DioError]: $e');
@@ -61,33 +65,34 @@ class AudioDocRemoteDataSourceImpl implements AudioDocRemoteDataSource {
   }
 
   @override
-  Future<Stream<int>> uploadDoc(String accessToken, File doc) async {
-    return generateTestStream();
-    // try {
-    //   final http.MultipartFile multipartFile =
-    //       await http.MultipartFile.fromPath('document', doc.path,
-    //           filename: basename(doc.path));
-    //   final Uri uri = Uri.parse(Strings.apiUploadDoc);
-    //   final request = http.MultipartRequest('POST', uri);
-    //   request.headers['cookie'] = accessToken;
-    //   request.files.add(multipartFile);
-    //   final response = await request.send();
-    //   response.stream.transform(utf8.decoder).listen((event) {
-    //     print('upload doc: $event');
-    //     final Map<String, dynamic> res = jsonDecode(event);
-    //     if (!res['success']) {
-    //       throw PostException(
-    //           message: 'There was some error. Please try again');
-    //     }
-    //   });
-    // } on PostException catch (e) {
-    //   print(
-    //       'Error in [AudioDocRemoteDataSource] [uploadDoc] [PostException]: ${e.message}');
-    //   rethrow;
-    // } catch (e) {
-    //   print('Error in [AudioDocRemoteDataSource] [uploadDoc]: $e');
-    //   throw PostException(message: 'There was some error. Please try again');
-    // }
+  Future<void> uploadDoc(String accessToken, File doc) async {
+    try {
+      final http.MultipartFile multipartFile =
+          await http.MultipartFile.fromPath('document', doc.path,
+              filename: basename(doc.path));
+      final Uri uri = Uri.parse(Strings.apiUploadDoc);
+      final request = http.MultipartRequest('POST', uri);
+      request.headers['cookie'] = accessToken;
+      request.files.add(multipartFile);
+      final response = await request.send();
+      response.stream.transform(utf8.decoder).listen(
+        (event) {
+          print('upload doc: $event');
+          final Map<String, dynamic> res = jsonDecode(event);
+          if (!res['success']) {
+            throw PostException(
+                message: 'There was some error. Please try again');
+          }
+        },
+      );
+    } on PostException catch (e) {
+      print(
+          'Error in [AudioDocRemoteDataSource] [uploadDoc] [PostException]: ${e.message}');
+      rethrow;
+    } catch (e) {
+      print('Error in [AudioDocRemoteDataSource] [uploadDoc]: $e');
+      throw PostException(message: 'There was some error. Please try again');
+    }
   }
 
   @override

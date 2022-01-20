@@ -8,7 +8,7 @@ import 'package:dartz/dartz.dart';
 abstract class AudioDocRepo {
   Future<Either<Failure, List<AudioDoc>>> getAllAudioDocs();
   Future<Either<Failure, AudioDoc>> getAudioDoc(AudioDoc audioDoc);
-  Future<Either<Failure, Stream<int>>> uploadDoc(File doc);
+  Future<Either<Failure, Success>> uploadDoc(File doc);
   Future<Either<Failure, Success>> changeFavouriteTo(String fileId, bool favourite);
   Future<Either<Failure, Success>> deleteAudioDoc(String fileId);
   Future<File?> pickFile();

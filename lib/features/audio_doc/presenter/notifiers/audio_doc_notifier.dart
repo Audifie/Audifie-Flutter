@@ -19,10 +19,12 @@ class AudioDocNotifier extends ChangeNotifier {
   final UploadAudioDocUsecase _uploadAudioDocUsecase = UploadAudioDocUsecase();
 
   bool _isLoading = false;
+  bool _isUploadingFile = false;
   List<AudioDoc> _audioDocs = [];
   bool _isProblemInFetching = false;
   AudioDoc? _currentlyPlayingAudioDoc;
   bool get isLoading => _isLoading;
+  bool get isUploadingFile => _isUploadingFile;
   List<AudioDoc> get audioDocs => _audioDocs;
   bool get isProblemInFetching => _isProblemInFetching;
   AudioDoc? get currentlyPlayingAudioDoc => _currentlyPlayingAudioDoc;
@@ -84,9 +86,11 @@ class AudioDocNotifier extends ChangeNotifier {
 
     await _getAudioDocUsecase.getAudioDoc(audioDoc)
       ..fold((l) {
+        _isProblemInFetching = true;
         ScaffoldMessenger.of(context)
             .showSnackBar(Snackbar(message: l.message));
       }, (r) {
+        _isProblemInFetching = false;
         // ** Updating the audioURL and speechURL **
         for (int i = 0; i < _audioDocs.length; i++) {
           if (_audioDocs[i].fileId == r.fileId) {
@@ -96,12 +100,15 @@ class AudioDocNotifier extends ChangeNotifier {
           }
         }
       });
-    
+
     _isLoading = false;
     notifyListeners();
   }
 
   Future<Stream<int>?> uploadAudioDoc(BuildContext context) async {
+    _isUploadingFile = true;
+    notifyListeners();
+
     final File? doc = await _uploadAudioDocUsecase.pickFile();
     if (doc != null) {
       ScaffoldMessenger.of(context)
@@ -111,14 +118,17 @@ class AudioDocNotifier extends ChangeNotifier {
           ScaffoldMessenger.of(context)
               .showSnackBar(Snackbar(message: l.message));
         }, (r) {
-          // ScaffoldMessenger.of(context)
-          //     .showSnackBar(Snackbar(message: 'File uploaded'));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(Snackbar(message: 'File uploaded'));
           return r;
         });
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(Snackbar(message: 'No file selected'));
     }
+
+    _isUploadingFile = false;
+    notifyListeners();
   }
 
   Future<void> changeFavouriteTo(
@@ -181,5 +191,11 @@ class AudioDocNotifier extends ChangeNotifier {
   Future<void> skipToPrevious() => _audioDocUsecase.skipToPrevious();
   Future<void> skipToNext() => _audioDocUsecase.skipToNext();
   Future<void> setSpeed(double speed) => _audioDocUsecase.setSpeed(speed);
+
+  /// Fast forwards 15 s
+  Future<void> fastForward() => _audioDocUsecase.fastForward();
+
+  /// Rewinds 15 s
+  Future<void> rewind() => _audioDocUsecase.rewind();
   Future<void> stop() => _audioDocUsecase.stop();
 }

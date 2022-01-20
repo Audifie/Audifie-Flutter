@@ -5,7 +5,7 @@
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.INTERNET" />
 
-  <application android:label="audifie_version_1" android:icon="@mipmap/ic_launcher" android:usesCleartextTraffic="true">
+  <application android:label="Audifie" android:icon="@mipmap/ic_launcher" android:usesCleartextTraffic="true">
     <!-- Added these lines for facebook sign in setup -->
     <!-- <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
 

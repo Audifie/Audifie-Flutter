@@ -13,7 +13,7 @@ class UploadAudioDocUsecase {
     return _audioDocRepo.pickFile();
   }
 
-  Future<Either<Failure, Stream<int>>> uploadDoc(File doc) async {
+  Future<Either<Failure, Success>> uploadDoc(File doc) async {
     return _audioDocRepo.uploadDoc(doc);
   }
 }

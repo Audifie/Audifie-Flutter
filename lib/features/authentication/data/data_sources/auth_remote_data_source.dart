@@ -7,7 +7,6 @@ import 'package:audifie_version_1/features/authentication/data/models/sign_in_in
 import 'package:audifie_version_1/features/authentication/data/models/sign_up_info_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AuthRemoteDataSource {
   void setAccessTokenAsCookieGlobally(String accessToken);
@@ -29,7 +28,7 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio _dio = sl<Dio>();
-  final GoogleSignIn _googleSignIn = sl<GoogleSignIn>();
+  // final GoogleSignIn _googleSignIn = sl<GoogleSignIn>();
 
   @override
   void setAccessTokenAsCookieGlobally(String accessToken) {
@@ -175,44 +174,44 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<String> googleSignIn() async {
-    GoogleSignInAccount? googleAccount;
+    // GoogleSignInAccount? googleAccount;
     try {
-      final GoogleSignInAccount? currentUser = _googleSignIn.currentUser;
-      print('Current user: $currentUser');
+      //   final GoogleSignInAccount? currentUser = _googleSignIn.currentUser;
+      //   print('Current user: $currentUser');
 
-      if (currentUser != null) {
-        await _googleSignIn.disconnect();
-        // googleAccount = _googleSignIn.currentUser;
-      }
-      // else {
-      googleAccount = await _googleSignIn.signIn();
+      //   if (currentUser != null) {
+      //     await _googleSignIn.disconnect();
+      //     // googleAccount = _googleSignIn.currentUser;
+      //   }
+      //   // else {
+      //   googleAccount = await _googleSignIn.signIn();
+      //   // }
+      //   if (googleAccount != null) {
+      //     final GoogleSignInAuthentication googleSignInAuthentication =
+      //         await googleAccount.authentication;
+
+      //     final String? code = googleSignInAuthentication.idToken;
+      //     print('Code: $code');
+      //     if (code != null) {
+      //       final Response response = await _dio.post(
+      //         Strings.apiGoogleLogin,
+      //         data: {
+      //           'code': code,
+      //         },
+      //       );
+      //     }
+
+      // if (response.statusCode == 200) {
+      //   if (response.data['token'] != null) {
+      //     // return response.data['token'];
+      //   }
+      //   throw SignInException(message: 'Access token was null');
+      // } else {
+      //   if (response.data['message'] != null) {
+      //     throw SignInException(message: response.data['message']);
+      //   }
       // }
-      if (googleAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication =
-            await googleAccount.authentication;
 
-        final String? code = googleSignInAuthentication.idToken;
-        print('Code: $code');
-        if (code != null) {
-          final Response response = await _dio.post(
-            Strings.apiGoogleLogin,
-            data: {
-              'code': code,
-            },
-          );
-        }
-
-        // if (response.statusCode == 200) {
-        //   if (response.data['token'] != null) {
-        //     // return response.data['token'];
-        //   }
-        //   throw SignInException(message: 'Access token was null');
-        // } else {
-        //   if (response.data['message'] != null) {
-        //     throw SignInException(message: response.data['message']);
-        //   }
-        // }
-      }
       throw SignInException(message: 'There was some error. Please try again');
     } on SignInException catch (e) {
       print(

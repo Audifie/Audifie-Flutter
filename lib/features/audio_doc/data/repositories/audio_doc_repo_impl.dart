@@ -51,10 +51,11 @@ class AudioDocRepoImpl implements AudioDocRepo {
   }
 
   @override
-  Future<Either<Failure, Stream<int>>> uploadDoc(File doc) async {
+  Future<Either<Failure, Success>> uploadDoc(File doc) async {
     try {
       final String accessToken = await _authLocalDataSource.getAccessToken();
-      return Right(await _audioDocRemoteDataSource.uploadDoc(accessToken, doc));
+      await _audioDocRemoteDataSource.uploadDoc(accessToken, doc);
+      return Right(PostSuccess(message: 'File uploaded successfully'));
     } on PostException catch (e) {
       return Left(PostFailure(message: e.message));
     }

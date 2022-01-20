@@ -16,6 +16,7 @@ Future<AudioHandler> initAudioService() async {
       // androidNotificationOngoing: true,
       // androidStopForegroundOnPause: true,
       notificationColor: Palette.audioDocCardBg,
+      androidNotificationIcon: 'mipmap/audifie_android_notification_icon',
     ),
   );
 }
@@ -41,11 +42,12 @@ class MyAudioHandler extends BaseAudioHandler {
   void _notifyAudioHandlerAboutPlaybackEvent() {
     _player.playbackEventStream.listen((event) {
       final bool isPlaying = _player.playing;
+      _player.setLoopMode(LoopMode.one);
       playbackState.add(playbackState.value.copyWith(
         controls: [
-          MediaControl.skipToPrevious,
+          MediaControl.rewind,
           isPlaying ? MediaControl.pause : MediaControl.play,
-          MediaControl.skipToNext,
+          MediaControl.fastForward,
         ],
         androidCompactActionIndices: const [0, 1, 2],
         processingState: const {
@@ -118,6 +120,21 @@ class MyAudioHandler extends BaseAudioHandler {
   Future<void> setSpeed(double speed) => _player.setSpeed(speed);
 
   @override
+  Future<void> fastForward() async {
+    if (_player.duration == null) return;
+    return _player.seek(Duration(
+      seconds: _player.position.inSeconds + 10 >= _player.duration!.inSeconds
+          ? _player.duration!.inSeconds
+          : _player.position.inSeconds + 10));
+  }
+
+  @override
+  Future<void> rewind() => _player.seek(Duration(
+      seconds: _player.position.inSeconds - 10 <= 0
+          ? 0
+          : _player.position.inSeconds - 10));
+
+  @override
   Future<void> stop() => _player.stop();
 }
 
@@ -134,6 +151,8 @@ abstract class AudioPlayerService {
   Future<void> skipToPrevious();
   Future<void> skipToNext();
   Future<void> setSpeed(double speed);
+  Future<void> fastForward();
+  Future<void> rewind();
   Future<void> stop();
 }
 
@@ -235,6 +254,12 @@ class AudioPlayerServiceImpl implements AudioPlayerService {
 
   @override
   Future<void> setSpeed(double speed) => audioHandler.setSpeed(speed);
+
+  @override
+  Future<void> fastForward() => audioHandler.fastForward();
+
+  @override
+  Future<void> rewind() => audioHandler.rewind();
 
   @override
   Future<void> stop() => audioHandler.stop();
