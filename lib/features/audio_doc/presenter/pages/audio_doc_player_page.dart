@@ -260,6 +260,12 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                     // Favorite
                     IsFavoriteButton(
                       audioDoc: widget.audioDoc,
+                      onPressed: () {
+                        setState(() {
+                          context.read<AudioDocNotifier>().changeFavouriteTo(
+                              context, widget.audioDoc, !widget.audioDoc.isFavourite);
+                        });
+                      },
                     ),
                     // Skip to previous
                     SkipButton(isSkipNext: false),
@@ -384,27 +390,16 @@ class SkipButton extends StatelessWidget {
 
 class IsFavoriteButton extends StatelessWidget {
   final AudioDoc audioDoc;
-  const IsFavoriteButton({Key? key, required this.audioDoc}) : super(key: key);
+  final Function()? onPressed;
+  const IsFavoriteButton({Key? key, required this.audioDoc, this.onPressed})
+      : super(key: key);
   static SizeConfig sc = sl<SizeConfig>();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // TODO: Favourite function
-        // final String idToken = context
-        //     .read<PageSelectorNotifier>()
-        //     .authSession!
-        //     .userPoolTokens
-        //     .idToken;
-        // !widget.audioDocModel.isFavourite
-        //     ? context
-        //         .read<UploadNotifier>()
-        //         .addFavourite(widget.audioDocModel, idToken)
-        //     : context
-        //         .read<UploadNotifier>()
-        //         .removeFavourite(widget.audioDocModel, idToken);
-      },
+    return InkWell(
+      borderRadius: BorderRadius.all(Radius.circular(100)),
+      onTap: onPressed,
       child: Container(
         alignment: Alignment.center,
         child: Icon(

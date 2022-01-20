@@ -151,7 +151,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       if (response.statusCode == 200) {
         final String? accessToken = response.headers['set-cookie']?[0];
-        print('Cookie reponse: $accessToken');
         if (accessToken != null) {
           setAccessTokenAsCookieGlobally(accessToken);
           return accessToken;

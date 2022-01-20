@@ -111,6 +111,7 @@ class Strings {
   static const apiCurrentUser = 'http://3.109.49.60:8080/api/users/current';
   static const apiLogout = 'http://3.109.49.60:8080/api/users/logout';
   static const apiGetAllDocs = 'http://3.109.49.60:8080/api/documents';
+  static const apiGetDoc = 'http://3.109.49.60:8080/api/documents/get-audio-details/';
   static const apiFavourite = 'http://3.109.49.60:8080/api/documents/edit/';
   static const apiDeleteDoc = 'http://3.109.49.60:8080/api/documents/delete/';
   static const apiUploadDoc = 'http://3.109.49.60:8080/api/documents/upload';
@@ -363,8 +364,8 @@ We do not ensure that the information on this website is correct, we do not warr
 """;
 
   // Mocks
-  // TODO: Delete this when recepients email has come
-  static const tempRecipientEmail = "dhritiman.roy.dev@gmail.com";
+  // TODO: Delete this when support email has come
+  static const tempRecipientEmail = "audifie2021@gmail.com";
   static const audioURL1 =
       "http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3";
   static const audioURL2 =

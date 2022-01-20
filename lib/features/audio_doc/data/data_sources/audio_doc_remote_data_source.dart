@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 
 abstract class AudioDocRemoteDataSource {
   Future<List<AudioDocModel>> getAllAudioDocs();
-  Future<AudioDocModel> getAudioDoc();
+  Future<void> getAudioDoc(String fileId);
   Future<Stream<int>> uploadDoc(String accessToken, File doc);
   Future<void> changeFavouriteTo(String fileId, bool favourite);
   Future<void> deleteAudioDoc(String fileId);
@@ -38,16 +38,25 @@ class AudioDocRemoteDataSourceImpl implements AudioDocRemoteDataSource {
     }
   }
 
+//audioUrl
+//speechUrl
   @override
-  Future<AudioDocModel> getAudioDoc() {
-    // TODO: implement getAudioDoc
-    throw UnimplementedError();
+  Future<void> getAudioDoc(String fileId) async {
+    try {
+      final Response result = await _dio.get(Strings.apiGetDoc + fileId);
+      print('Result: ${result.data}');
+    } on DioError catch (e) {
+      print('Dio error: $e');
+      print('Error: ${e.response!.data['message']}');
+    } catch (e) {
+      print('Error in [AudioDocRemoteDataSource] [getAudioDoc]: $e');
+    }
   }
 
   Stream<int> generateTestStream() {
     return Stream<int>.periodic(const Duration(milliseconds: 10), (x) {
       print('X: $x');
-      return x+1;
+      return x + 1;
     }).take(100);
   }
 

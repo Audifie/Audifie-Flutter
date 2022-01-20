@@ -14,7 +14,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override 
   Future<void> storeAccessToken(String accessToken) async {
-    print('Access token: $accessToken');
     try {
       final bool isStored = await _sharedPreferences.setString(Strings.keyAccessToken, accessToken);
       if (!isStored) {
