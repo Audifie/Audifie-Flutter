@@ -86,19 +86,7 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   void googleSignIn(BuildContext context) async {
-    _isLoading = true;
-    notifyListeners();
-
-    await _signInUsecase.googleSignIn()
-      ..fold((l) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(Snackbar(message: l.message));
-      }, (r) {
-        _isAuthDone = true;
-      });
-
-    _isLoading = false;
-    notifyListeners();
+    _showCommingSoon(context);
   }
 
   void facebookSignIn(BuildContext context) async {

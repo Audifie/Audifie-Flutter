@@ -123,7 +123,7 @@ class _BaseHomePageState extends State<BaseHomePage> {
         alignment: Alignment.center,
         children: [
           _pageInfoList[currentPageIndex].widget,
-          // TODO: Base audi player
+          // TODO: Base audio player
           Positioned(
             bottom: 0,
             left: 0,
@@ -184,6 +184,7 @@ class _BaseHomePageState extends State<BaseHomePage> {
                                                 },
                                               ),
                                       ),
+                                      SizedBox(width: sc.width(10)),
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment:

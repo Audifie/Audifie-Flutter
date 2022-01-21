@@ -216,7 +216,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on SignInException catch (e) {
       print(
           'Error in [AuthRemoteDataSourceImpl] [googleSignIn] [SignInException]: ${e.message}');
-      throw e;
+      rethrow;
     } on DioError catch (e) {
       print(
           'Error in [AuthRemoteDataSourceImpl] [googleSignIn] [DioError]: ${e.error}');

@@ -5,6 +5,7 @@ import 'package:audifie_version_1/core/widgets/core_widgets.dart';
 import 'package:audifie_version_1/core/widgets/loading_widget.dart';
 import 'package:audifie_version_1/features/audio_doc/presenter/notifiers/audio_doc_notifier.dart';
 import 'package:audifie_version_1/features/audio_doc/presenter/pages/components/all_docs_page.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../../core/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -107,26 +108,29 @@ class _LibraryPageState extends State<LibraryPage>
                 ],
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Palette.primary,
-              onPressed: () {
-                // TODO: Upload function
-                // final String userID =
-                //     context.read<PageSelectorNotifier>().authUser!.userId;
-                // final String idToken = context
-                //     .read<PageSelectorNotifier>()
-                //     .authSession!
-                //     .userPoolTokens
-                //     .idToken;
-                // context.read<UploadNotifier>().uploadDoc(userID, idToken,
-                //     filePathsBox: Hive.box(Strings.filePathsBox));
+            floatingActionButton: Consumer<AudioDocNotifier>(
+              builder: (context, notifier, child) {
+                return FloatingActionButton(
+                  backgroundColor: Palette.primary,
+                  onPressed: !notifier.isUploadingFile ? () {
+                    context.read<AudioDocNotifier>().uploadAudioDoc(context);
+                  } : () {},
+                  child: !notifier.isUploadingFile
+                      ? SvgPicture.asset(
+                          Strings.uploadIcon,
+                          width: sc.width(19),
+                          height: sc.height(20),
+                          color: Palette.primaryText,
+                        )
+                      : SizedBox(
+                          height: sc.height(20),
+                          width: sc.height(20),
+                          child: CircularProgressIndicator(
+                            backgroundColor: Palette.primaryText,
+                          ),
+                        ),
+                );
               },
-              child: SvgPicture.asset(
-                Strings.uploadIcon,
-                width: sc.width(19),
-                height: sc.height(20),
-                color: Palette.primaryText,
-              ),
             ),
           ),
         ),

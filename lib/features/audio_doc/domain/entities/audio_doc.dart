@@ -10,7 +10,7 @@ class AudioDoc extends Equatable {
   String? audioURL;
   String? speechURL;
   Duration duration;
-  final ProgressStateEnum progressState;
+  ProgressStateEnum progressState;
   bool isFavourite;
   final String? imageURL;
 

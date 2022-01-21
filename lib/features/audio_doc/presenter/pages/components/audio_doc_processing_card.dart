@@ -3,9 +3,11 @@ import 'package:audifie_version_1/core/constants/strings.dart';
 import 'package:audifie_version_1/core/size_config.dart';
 import 'package:audifie_version_1/core/widgets/core_widgets.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/entities/audio_doc.dart';
+import 'package:audifie_version_1/features/audio_doc/presenter/notifiers/audio_doc_notifier.dart';
 import '../../../../../core/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class AudioDocProcessingCard extends StatefulWidget {
   final AudioDoc audioDoc;
@@ -75,6 +77,8 @@ class _AudioDocProcessingCardState extends State<AudioDocProcessingCard> {
                   // Title
                   Text(
                     title,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                     style: TStyle(
                       color: Palette.primaryText,
                       size: sc.text(16),
@@ -86,39 +90,28 @@ class _AudioDocProcessingCardState extends State<AudioDocProcessingCard> {
                       style: TStyle(
                           color: Palette.secondaryText, size: sc.text(14))),
                   // Get audio Button
-                  ElevatedButton(
-                    onPressed: () async {
-                      // TODO: Get audio button
-                      // final String fileId = widget.audioDocModel.fileId;
-                      // final String idToken = context
-                      //     .read<PageSelectorNotifier>()
-                      //     .authSession!
-                      //     .userPoolTokens
-                      //     .idToken;
-
-                      // await context.read<UploadNotifier>().postAudioDocModel(
-                      //       widget.audioDocModel,
-                      //       fileId,
-                      //       idToken,
-                      //       filePathsBox: Hive.box(Strings.filePathsBox),
-                      //     );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: sc.width(36),
-                        vertical: sc.height(14),
+                  SizedBox(
+                    width: sc.width(108),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        context.read<AudioDocNotifier>().getAudioDoc(context, widget.audioDoc);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          vertical: sc.height(14),
+                        ),
+                        primary: Palette.primaryText,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(sc.height(50)),
+                        ),
                       ),
-                      primary: Palette.primaryText,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(sc.height(50)),
+                      child: Text(
+                        _getAudio,
+                        style: TStyle(
+                          color: Palette.audioDocCardBg,
+                          size: sc.text(14),
+                        ).copyWith(fontWeight: FontWeight.w500),
                       ),
-                    ),
-                    child: Text(
-                      _getAudio,
-                      style: TStyle(
-                        color: Palette.audioDocCardBg,
-                        size: sc.text(14),
-                      ).copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],

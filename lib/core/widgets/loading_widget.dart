@@ -7,7 +7,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../size_config.dart';
 
 class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({Key? key}) : super(key: key);
+  final double? size;
+  const LoadingWidget({Key? key, this.size}) : super(key: key);
 
   static SizeConfig sc = sl<SizeConfig>();
 
@@ -31,7 +32,7 @@ class LoadingWidget extends StatelessWidget {
               ),
             );
           },
-          size: MediaQuery.of(context).size.width * .20,
+          size: size ?? MediaQuery.of(context).size.width * .20,
         ),
       ),
     );

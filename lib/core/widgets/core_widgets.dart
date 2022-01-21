@@ -64,7 +64,7 @@ class Snackbar extends SnackBar {
   //     ),
   //   );
 
-  static const Duration snackbarDuration = const Duration(seconds: 4);
+  static const Duration snackbarDuration = const Duration(seconds: 2);
 }
 
 class CustomTextFields extends TextFormField {

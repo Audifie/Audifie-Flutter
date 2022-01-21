@@ -6,6 +6,7 @@ import 'package:audifie_version_1/core/widgets/core_widgets.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/entities/audio_doc.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/entities/page_info.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/entities/playback_state_info.dart';
+import 'package:audifie_version_1/features/audio_doc/domain/entities/progress_state_enum.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/usecases/audio_doc_usecase.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/usecases/get_audio_doc_usecase.dart';
 import 'package:audifie_version_1/features/audio_doc/domain/usecases/upload_audio_doc_usecase.dart';
@@ -77,25 +78,26 @@ class AudioDocNotifier extends ChangeNotifier {
   }
 
   Future<void> getAudioDoc(BuildContext context, AudioDoc audioDoc) async {
-    if (audioDoc.audioURL != null) return;
-
-    print('Not working above statement');
+    if (audioDoc.audioURL != null) {
+      notifyListeners();
+      return;
+    }
 
     _isLoading = true;
     notifyListeners();
 
     await _getAudioDocUsecase.getAudioDoc(audioDoc)
       ..fold((l) {
-        _isProblemInFetching = true;
         ScaffoldMessenger.of(context)
             .showSnackBar(Snackbar(message: l.message));
       }, (r) {
-        _isProblemInFetching = false;
+        print('Should be updated');
         // ** Updating the audioURL and speechURL **
         for (int i = 0; i < _audioDocs.length; i++) {
           if (_audioDocs[i].fileId == r.fileId) {
             _audioDocs[i].audioURL = r.audioURL;
             _audioDocs[i].speechURL = r.speechURL;
+            _audioDocs[i].progressState = ProgressStateEnum.complete;
             break;
           }
         }
@@ -117,18 +119,23 @@ class AudioDocNotifier extends ChangeNotifier {
         ..fold((l) {
           ScaffoldMessenger.of(context)
               .showSnackBar(Snackbar(message: l.message));
-        }, (r) {
+        }, (r) async {
+          await Future.delayed(const Duration(seconds: 1));
+          _isUploadingFile = false;
+          notifyListeners();
+
+          await getAllAudioDocs(context);
+
           ScaffoldMessenger.of(context)
               .showSnackBar(Snackbar(message: 'File uploaded'));
-          return r;
         });
     } else {
+      _isUploadingFile = false;
+      notifyListeners();
+
       ScaffoldMessenger.of(context)
           .showSnackBar(Snackbar(message: 'No file selected'));
     }
-
-    _isUploadingFile = false;
-    notifyListeners();
   }
 
   Future<void> changeFavouriteTo(
@@ -158,7 +165,10 @@ class AudioDocNotifier extends ChangeNotifier {
   }
 
   Future<void> deleteAudioDoc(
-      BuildContext context, AudioDoc audioDoc, bool favourite) async {
+      BuildContext context, AudioDoc audioDoc) async {
+    _isLoading = true;
+    notifyListeners();
+
     await _getAudioDocUsecase.deleteAudioDoc(audioDoc.fileId)
       ..fold((l) {
         ScaffoldMessenger.of(context)
@@ -167,6 +177,7 @@ class AudioDocNotifier extends ChangeNotifier {
         _deleteAudioDocFromAudioDocList(audioDoc);
       });
 
+    _isLoading = false;
     notifyListeners();
   }
 

@@ -103,7 +103,9 @@ class _AudioDocCardState extends State<AudioDocCard> {
       children: [
         GestureDetector(
           onTap: () async {
-            await context.read<AudioDocNotifier>().getAudioDoc(context, widget.audioDoc);
+            await context
+                .read<AudioDocNotifier>()
+                .getAudioDoc(context, widget.audioDoc);
             Navigator.pushNamed(context, AudioDocPlayerPage.routeName,
                 arguments: widget.audioDoc);
           },
@@ -147,6 +149,8 @@ class _AudioDocCardState extends State<AudioDocCard> {
                         // Title
                         Text(
                           title,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                           style: TStyle(
                             color: Palette.primaryText,
                             size: sc.text(16),
@@ -225,29 +229,33 @@ class _AudioDocCardState extends State<AudioDocCard> {
                           children: [
                             Consumer<AudioDocNotifier>(
                               builder: (context, notifier, child) {
-                                return ElevatedButton(
-                                  onPressed: () async {
-                                    await context.read<AudioDocNotifier>().getAudioDoc(context, widget.audioDoc);
-                                    // TODO: Play button function
-                                    if (notifier.currentlyPlayingAudioDoc !=
-                                        null) {
-                                      _loadNewPlaylistAndPlay();
-                                    } else {
-                                      _loadPlaylistAndPlay();
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: sc.width(36),
-                                      vertical: sc.height(14),
+                                return SizedBox(
+                                  width: sc.width(108),
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      await context
+                                          .read<AudioDocNotifier>()
+                                          .getAudioDoc(
+                                              context, widget.audioDoc);
+                                      if (notifier.currentlyPlayingAudioDoc !=
+                                          null) {
+                                        _loadNewPlaylistAndPlay();
+                                      } else {
+                                        _loadPlaylistAndPlay();
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: sc.height(14),
+                                      ),
+                                      primary: Palette.primaryText,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            sc.height(50)),
+                                      ),
                                     ),
-                                    primary: Palette.primaryText,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(sc.height(50)),
-                                    ),
+                                    child: child,
                                   ),
-                                  child: child,
                                 );
                               },
                               child: Text(
@@ -296,7 +304,7 @@ class _AudioDocCardState extends State<AudioDocCard> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.fastOutSlowIn,
           width: MediaQuery.of(context).size.width,
-          height: _isMoreOpen ? (sc.height(4 * 52)) : 0,
+          height: _isMoreOpen ? (sc.height(3 * 52)) : 0,
           decoration: BoxDecoration(
             color: Palette.audioDocCardBg,
             borderRadius: BorderRadius.only(
@@ -315,30 +323,17 @@ class _AudioDocCardState extends State<AudioDocCard> {
                   ),
                   child: Column(
                     children: [
-                      _moreItem(
-                        Strings.downloadIcon,
-                        _downloadFile,
-                        () {
-                          // TODO: Download function
-                          // context.read<UploadNotifier>().downalodFile(
-                          //       widget.audioDocModel,
-                          //       Hive.box(Strings.filePathsBox),
-                          //     );
-                        },
-                      ),
-                      _divider,
+                      // _moreItem(
+                      //   Strings.downloadIcon,
+                      //   _downloadFile,
+                      //   () {},
+                      // ),
+                      // _divider,
                       _moreItem(
                         Strings.deleteIcon,
                         _delete,
                         () {
-                          // TODO: Delete function
-                          // final String idToken = context
-                          //     .read<PageSelectorNotifier>()
-                          //     .authSession!
-                          //     .userPoolTokens
-                          //     .idToken;
-                          // context.read<UploadNotifier>().deleteAudioDocModel(
-                          //     widget.audioDocModel, idToken);
+                          context.read<AudioDocNotifier>().deleteAudioDoc(context, widget.audioDoc);
                         },
                       ),
                       _divider,

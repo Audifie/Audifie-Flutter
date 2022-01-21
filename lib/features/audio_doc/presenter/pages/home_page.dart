@@ -61,20 +61,21 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: sc.height(104)),
                   // Upload button
                   Consumer<AudioDocNotifier>(
-                    builder: (context, notifier, chlid) {
-                      return UploadButton(
-                        isUploading: notifier.isUploadingFile,
-                        onUploadClicked: () {
-                          context.read<AudioDocNotifier>().uploadAudioDoc(context);
-                        },
-                        onCancelClicked: () {},
-                      );
-                    }
-                  ),
+                      builder: (context, notifier, chlid) {
+                    return UploadButton(
+                      isUploading: notifier.isUploadingFile,
+                      onUploadClicked: () {
+                        context
+                            .read<AudioDocNotifier>()
+                            .uploadAudioDoc(context);
+                      },
+                      onCancelClicked: () {},
+                    );
+                  }),
                   SizedBox(height: sc.height(93)),
                   // Document list
-                  audioDocNotifier.audioDocs.isNotEmpty
-                      ? !audioDocNotifier.isProblemInFetching
+                  !audioDocNotifier.isProblemInFetching
+                      ? audioDocNotifier.audioDocs.isNotEmpty
                           ? Column(
                               children: audioDocNotifier.audioDocs
                                       .asMap()
@@ -96,40 +97,40 @@ class _HomePageState extends State<HomePage> {
                                   ).toList() +
                                   [SizedBox(height: sc.height(200))],
                             )
-                          : Column(
-                              children: [
-                                Text(
-                                  'There was an error. Please reload',
-                                  style: TStyle(
-                                    color: Palette.primaryText,
-                                    size: sc.text(14),
-                                    isBold: true,
-                                    font: Strings.comfortaaFont,
-                                  ),
+                          : EmptyListWidget()
+                      : Column(
+                          children: [
+                            Text(
+                              'There was an error. Please reload',
+                              style: TStyle(
+                                color: Palette.primaryText,
+                                size: sc.text(14),
+                                isBold: true,
+                                font: Strings.comfortaaFont,
+                              ),
+                            ),
+                            SizedBox(height: sc.height(24)),
+                            InkWell(
+                              onTap: () {
+                                context
+                                    .read<AudioDocNotifier>()
+                                    .getAllAudioDocs(context);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(sc.height(6)),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Palette.primary,
                                 ),
-                                SizedBox(height: sc.height(24)),
-                                InkWell(
-                                  onTap: () {
-                                    context
-                                        .read<AudioDocNotifier>()
-                                        .getAllAudioDocs(context);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(sc.height(6)),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Palette.primary,
-                                    ),
-                                    child: Icon(
-                                      Icons.replay_outlined,
-                                      color: Palette.primaryText,
-                                      size: sc.height(24),
-                                    ),
-                                  ),
+                                child: Icon(
+                                  Icons.replay_outlined,
+                                  color: Palette.primaryText,
+                                  size: sc.height(24),
                                 ),
-                              ],
-                            )
-                      : EmptyListWidget(),
+                              ),
+                            ),
+                          ],
+                        ),
                 ],
               ),
             ),
