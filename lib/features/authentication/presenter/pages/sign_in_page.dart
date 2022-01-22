@@ -191,7 +191,7 @@ class _SignInPageState extends State<SignInPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(
-                        horizontal: sc.width(30),
+                        horizontal: sc.width(28),
                         vertical: sc.height(14),
                       ),
                       shape: RoundedRectangleBorder(
@@ -226,7 +226,7 @@ class _SignInPageState extends State<SignInPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(
-                        horizontal: sc.width(28),
+                        horizontal: sc.width(24),
                         vertical: sc.height(14),
                       ),
                       shape: RoundedRectangleBorder(
