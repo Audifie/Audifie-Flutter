@@ -269,18 +269,6 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                         return SizedBox();
                       },
                     ),
-                    // Text(
-                    //   // widget.audioDoc.subtitles,
-                    //   // TODO: Extract text from speechURL
-                    //   _speechText,
-                    //   maxLines: 18,
-                    //   overflow: TextOverflow.ellipsis,
-                    //   style: TextStyle(
-                    //     height: sc.width(1.6),
-                    //     fontSize: sc.text(18),
-                    //     color: Palette.primaryText,
-                    //   ),
-                    // ),
                   ),
                 ),
                 SizedBox(height: sc.height(36)),
