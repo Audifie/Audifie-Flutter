@@ -96,7 +96,7 @@ class AudioDocNotifier extends ChangeNotifier {
         for (int i = 0; i < _audioDocs.length; i++) {
           if (_audioDocs[i].fileId == r.fileId) {
             _audioDocs[i].audioURL = r.audioURL;
-            _audioDocs[i].speechURL = r.speechURL;
+            _audioDocs[i].speechMarks = r.speechMarks;
             _audioDocs[i].progressState = ProgressStateEnum.complete;
             break;
           }
@@ -164,8 +164,7 @@ class AudioDocNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteAudioDoc(
-      BuildContext context, AudioDoc audioDoc) async {
+  Future<void> deleteAudioDoc(BuildContext context, AudioDoc audioDoc) async {
     _isLoading = true;
     notifyListeners();
 

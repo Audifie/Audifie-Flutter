@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audifie_version_1/core/constants/palette.dart';
 import 'package:audifie_version_1/core/constants/strings.dart';
 import 'package:audifie_version_1/core/service_locator.dart';
@@ -11,6 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 
 class AudioDocPlayerPage extends StatefulWidget {
   static const String routeName = 'audio_doc_player_page';
@@ -28,6 +33,7 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
   static const String _oneX = "1x";
   static const String _oneHalfX = "1.5x";
   static const String _twoX = "2x";
+  String _speechText = '-- Speech Text --';
 
   static const double _oneXSpeed = 1;
   static const double _oneHalfXSpeed = 1.5;
@@ -126,6 +132,14 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
     context.read<AudioDocNotifier>().play(widget.audioDoc);
   }
 
+  void _combineSpeechText() {
+    String totalText = '';
+    widget.audioDoc.speechMarks.forEach((element) {
+      totalText = totalText + element!['value'];
+    });
+    _speechText = totalText;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -150,6 +164,8 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
     context.read<AudioDocNotifier>().durationStream.listen((duration) {
       _totalDuration = duration;
     });
+
+    _combineSpeechText();
   }
 
   @override
@@ -222,11 +238,11 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                     child: Text(
                       // widget.audioDoc.subtitles,
                       // TODO: Extract text from speechURL
-                      'The text in this section will come from speechURL field in AudioDoc entity',
+                      _speechText,
                       maxLines: 18,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        height: sc.height(1.75),
+                        height: 1.5,
                         fontSize: sc.text(18),
                         color: Palette.primaryText,
                       ),
@@ -265,7 +281,9 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                       onPressed: () {
                         setState(() {
                           context.read<AudioDocNotifier>().changeFavouriteTo(
-                              context, widget.audioDoc, !widget.audioDoc.isFavourite);
+                              context,
+                              widget.audioDoc,
+                              !widget.audioDoc.isFavourite);
                         });
                       },
                     ),

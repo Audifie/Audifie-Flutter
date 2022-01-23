@@ -6,7 +6,7 @@ class AudioDocModel extends AudioDoc {
     required String fileId,
     required String title,
     required String? audioURL,
-    required String? speechURL,
+    required List<Map<dynamic, dynamic>?> speechMarks,
     required bool isProcessing,
     required bool isFavourite,
     required String? imageURL,
@@ -14,7 +14,7 @@ class AudioDocModel extends AudioDoc {
           fileId: fileId,
           title: title,
           audioURL: audioURL,
-          speechURL: speechURL,
+          speechMarks: speechMarks,
           duration: const Duration(),
           progressState: _getProgressState(isProcessing),
           isFavourite: isFavourite,
@@ -41,7 +41,7 @@ class AudioDocModel extends AudioDoc {
       fileId: map['_id'] ?? DateTime.now().toString(),
       title: map['title'] ?? '-- Title --',
       audioURL: null,
-      speechURL: null,
+      speechMarks: [],
       isProcessing: map['processing'] ?? false,
       isFavourite: map['isFavourite'] ?? false,
       imageURL: map['imageURL'],
@@ -49,12 +49,13 @@ class AudioDocModel extends AudioDoc {
   }
 
   // This function is used when getting a specific audio doc
-  factory AudioDocModel.fromMapToGetAudioDoc(AudioDocModel audioDocModel, Map<String, dynamic> map) {
+  factory AudioDocModel.fromMapToGetAudioDoc(
+      AudioDocModel audioDocModel, Map<String, dynamic> map) {
     return AudioDocModel(
       fileId: audioDocModel.fileId,
       title: audioDocModel.title,
       audioURL: map['audioUrl'],
-      speechURL: map['speechUrl'],
+      speechMarks: map['speechUrl'],
       isProcessing: _isProcessing(audioDocModel.progressState),
       isFavourite: audioDocModel.isFavourite,
       imageURL: audioDocModel.imageURL,

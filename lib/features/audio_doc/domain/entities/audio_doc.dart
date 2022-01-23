@@ -8,7 +8,7 @@ class AudioDoc extends Equatable {
   final String fileId;
   final String title;
   String? audioURL;
-  String? speechURL;
+  List<Map<dynamic, dynamic>?> speechMarks;
   Duration duration;
   ProgressStateEnum progressState;
   bool isFavourite;
@@ -18,7 +18,7 @@ class AudioDoc extends Equatable {
     required this.fileId,
     required this.title,
     required this.audioURL,
-    required this.speechURL,
+    required this.speechMarks,
     required this.duration,
     required this.progressState,
     required this.isFavourite,

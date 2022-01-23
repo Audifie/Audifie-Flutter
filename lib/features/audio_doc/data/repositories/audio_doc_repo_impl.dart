@@ -14,14 +14,17 @@ import 'package:audifie_version_1/features/authentication/data/data_sources/auth
 import 'package:dartz/dartz.dart';
 
 class AudioDocRepoImpl implements AudioDocRepo {
-  final AudioDocRemoteDataSource _audioDocRemoteDataSource = sl<AudioDocRemoteDataSource>();
-  final AudioDocLocalDataSource _audioDocLocalDataSource = sl<AudioDocLocalDataSource>();
+  final AudioDocRemoteDataSource _audioDocRemoteDataSource =
+      sl<AudioDocRemoteDataSource>();
+  final AudioDocLocalDataSource _audioDocLocalDataSource =
+      sl<AudioDocLocalDataSource>();
   final AuthLocalDataSource _authLocalDataSource = sl<AuthLocalDataSource>();
 
   @override
   Future<Either<Failure, List<AudioDoc>>> getAllAudioDocs() async {
     try {
-      final List<AudioDocModel> audioDocModel = await _audioDocRemoteDataSource.getAllAudioDocs();
+      final List<AudioDocModel> audioDocModel =
+          await _audioDocRemoteDataSource.getAllAudioDocs();
       return Right(audioDocModel);
     } on GetException catch (e) {
       return Left(GetFailure(message: e.message));
@@ -39,7 +42,7 @@ class AudioDocRepoImpl implements AudioDocRepo {
         fileId: audioDoc.fileId,
         title: audioDoc.title,
         audioURL: audioDoc.audioURL,
-        speechURL: audioDoc.speechURL,
+        speechMarks: audioDoc.speechMarks,
         isFavourite: audioDoc.isFavourite,
         isProcessing: _isProcessing(audioDoc.progressState),
         imageURL: audioDoc.imageURL,
@@ -62,7 +65,8 @@ class AudioDocRepoImpl implements AudioDocRepo {
   }
 
   @override
-  Future<Either<Failure, Success>> changeFavouriteTo(String fileId, bool favourite) async {
+  Future<Either<Failure, Success>> changeFavouriteTo(
+      String fileId, bool favourite) async {
     try {
       await _audioDocRemoteDataSource.changeFavouriteTo(fileId, favourite);
       return Right(PostSuccess(message: ''));

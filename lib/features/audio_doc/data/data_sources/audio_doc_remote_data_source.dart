@@ -44,16 +44,27 @@ class AudioDocRemoteDataSourceImpl implements AudioDocRemoteDataSource {
       final String fileId = audioDocModel.fileId;
       final Response result = await _dio.get(Strings.apiGetDoc + fileId);
 
-      if (result.statusCode == 404) throw GetException(message: 'File is still getting processed');
+      if (result.statusCode == 404)
+        throw GetException(message: 'File is still getting processed');
 
       final Map<String, dynamic> map = result.data as Map<String, dynamic>;
+
+      final Response speechResponse = await _dio.get(map['speechUrl']);
+      final List<Map?> speechMap = [];
+      LineSplitter ls = new LineSplitter();
+      ls
+          .convert(speechResponse.data)
+          .forEach((element) => speechMap.add(json.decode(element)));
+      map['speechUrl'] = speechMap;
+
       final AudioDocModel updatedAudioDocModel =
           AudioDocModel.fromMapToGetAudioDoc(audioDocModel, map);
       return updatedAudioDocModel;
     } on DioError catch (e) {
       print('Error in [AudioDocRemoteDataSource] [getAudioDoc] [DioError]: $e');
       print('Dio error message: ${e.response!.data['message']}');
-      if (e.response!.statusCode == 404) throw GetException(message: 'File is still getting processed');
+      if (e.response!.statusCode == 404)
+        throw GetException(message: 'File is still getting processed');
       throw GetException(message: 'There was some error. Please try again');
     } catch (e) {
       print('Error in [AudioDocRemoteDataSource] [getAudioDoc]: $e');

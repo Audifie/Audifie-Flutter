@@ -13,7 +13,7 @@ class DummyUtil {
     title: 'Audio 1',
     isProcessing: false,
     audioURL: Strings.audioURL1,
-    speechURL: null,
+    speechMarks: [],
     imageURL: null,
     isFavourite: false,
   );
@@ -23,7 +23,7 @@ class DummyUtil {
     title: 'New audio from Droy',
     isProcessing: false,
     audioURL: Strings.audioURL2,
-    speechURL: null,
+    speechMarks: [],
     imageURL: null,
     isFavourite: false,
   );
