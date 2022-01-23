@@ -137,7 +137,9 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
     widget.audioDoc.speechMarks.forEach((element) {
       totalText = totalText + element!['value'];
     });
-    _speechText = totalText;
+    totalText.isEmpty
+        ? _speechText = ' -- Subtitles -- '
+        : _speechText = totalText;
   }
 
   @override
@@ -242,7 +244,7 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                       maxLines: 18,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        height: 1.5,
+                        height: sc.width(1.6),
                         fontSize: sc.text(18),
                         color: Palette.primaryText,
                       ),
