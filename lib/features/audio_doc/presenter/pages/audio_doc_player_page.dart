@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:audifie_version_1/core/constants/palette.dart';
@@ -13,9 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 class AudioDocPlayerPage extends StatefulWidget {
   static const String routeName = 'audio_doc_player_page';
@@ -33,7 +32,7 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
   static const String _oneX = "1x";
   static const String _oneHalfX = "1.5x";
   static const String _twoX = "2x";
-  String _speechText = '-- Speech Text --';
+  static String _speechText = '-- Speech Text --';
 
   static const double _oneXSpeed = 1;
   static const double _oneHalfXSpeed = 1.5;
@@ -173,6 +172,8 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
   @override
   Widget build(BuildContext context) {
     final String title = widget.audioDoc.title;
+    final List<Map<dynamic, dynamic>?> speechMarks =
+        widget.audioDoc.speechMarks;
 
     return Stack(
       children: [
@@ -237,18 +238,49 @@ class _AudioDocPlayerPageState extends State<AudioDocPlayerPage> {
                         Radius.circular(8),
                       ),
                     ),
-                    child: Text(
-                      // widget.audioDoc.subtitles,
-                      // TODO: Extract text from speechURL
-                      _speechText,
-                      maxLines: 18,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        height: sc.width(1.6),
-                        fontSize: sc.text(18),
-                        color: Palette.primaryText,
-                      ),
+                    child: StreamBuilder<Duration>(
+                      stream: context.read<AudioDocNotifier>().positionStream,
+                      builder: (_, snapshot) {
+                        if (snapshot.data != null) {
+                          double time =
+                              snapshot.data!.inMilliseconds.toDouble();
+
+                          late String highlistText;
+                          for (int i = 0; i < speechMarks.length; i++) {
+                            if (time >= speechMarks[i]!['time']) {
+                              highlistText = speechMarks[i]!['value'];
+                            }
+                          }
+                          return SingleChildScrollView(
+                            child: SubstringHighlight(
+                              text: _speechText,
+                              term: highlistText,
+                              textStyle: TextStyle(
+                                height: sc.width(1.6),
+                                fontSize: sc.text(18),
+                                color: Palette.primaryText,
+                              ),
+                              textStyleHighlight: TextStyle(
+                                color: Palette.primary,
+                              ),
+                            ),
+                          );
+                        }
+                        return SizedBox();
+                      },
                     ),
+                    // Text(
+                    //   // widget.audioDoc.subtitles,
+                    //   // TODO: Extract text from speechURL
+                    //   _speechText,
+                    //   maxLines: 18,
+                    //   overflow: TextOverflow.ellipsis,
+                    //   style: TextStyle(
+                    //     height: sc.width(1.6),
+                    //     fontSize: sc.text(18),
+                    //     color: Palette.primaryText,
+                    //   ),
+                    // ),
                   ),
                 ),
                 SizedBox(height: sc.height(36)),
